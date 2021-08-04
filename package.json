@@ -1,0 +1,64 @@
+{
+  "name": "branch-remover",
+  "version": "1.0.0",
+  "description": "A tool for removing branches on GitHub.",
+  "author": "Alexey Nemiro <alexey.nemiro@clearscale.com>",
+  "license": "MIT",
+  "keywords": [
+    "github",
+    "automation",
+    "branch remover",
+    "branches",
+    "remover",
+    "ceaner"
+  ],
+  "homepage": "https://github.com/sfm-tools/branch-remover#readme",
+  "bugs": {
+    "url": "https://github.com/sfm-tools/branch-remover/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sfm-tools/branch-remover.git"
+  },
+  "engines": {
+    "node": ">=12.18.3"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node ./node_modules/ts-node index.ts",
+    "build": "rimraf dist/ && tsc",
+    "test": "mocha -r ts-node/register tests/*.ts tests/**/*.ts",
+    "eslint": "eslint src/ --ext ts"
+  },
+  "dependencies": {
+    "@octokit/rest": "18.9.0",
+    "axios": "0.21.1",
+    "chalk": "4.1.2",
+    "string-format": "2.0.0",
+    "winston": "3.3.3"
+  },
+  "devDependencies": {
+    "@types/chai": "4.2.21",
+    "@types/chai-as-promised": "7.1.4",
+    "@types/mocha": "9.0.0",
+    "@types/node": "16.4.10",
+    "@types/string-format": "2.0.0",
+    "@typescript-eslint/eslint-plugin": "4.29.0",
+    "@typescript-eslint/parser": "4.29.0",
+    "chai": "4.3.4",
+    "chai-as-promised": "7.1.1",
+    "coveralls": "3.1.1",
+    "eslint": "7.32.0",
+    "eslint-plugin-import": "2.23.4",
+    "eslint-plugin-simple-import-sort": "7.0.0",
+    "eslint-plugin-sort-exports": "0.4.0",
+    "eslint-plugin-unused-imports": "1.1.2",
+    "memory-streams": "0.1.3",
+    "mocha": "9.0.3",
+    "mocha-lcov-reporter": "1.3.0",
+    "nyc": "15.1.0",
+    "rimraf": "3.0.2",
+    "ts-node": "10.1.0",
+    "typescript": "4.3.5"
+  }
+}
