@@ -60,7 +60,7 @@ export class GitHubProvider implements IProvider {
     return response;
   }
 
-  public async deleteBranch(branchName: string): Promise<void> {
+  public async removeBranch(branchName: string): Promise<void> {
     await this._client.git.deleteRef({
       owner: this.owner,
       repo: this.repo,

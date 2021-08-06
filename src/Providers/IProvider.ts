@@ -10,6 +10,6 @@ export interface IProvider {
 
   branchIsExists(branchName: string): Promise<boolean>;
 
-  deleteBranch(branchName: string): Promise<void>;
+  removeBranch(branchName: string): Promise<void>;
 
 }
