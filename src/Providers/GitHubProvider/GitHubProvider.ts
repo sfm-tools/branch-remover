@@ -17,11 +17,11 @@ export class GitHubProvider implements IProvider {
 
   private readonly _client: Octokit;
 
-  public get owner(): string {
+  private get owner(): string {
     return this._auth.owner;
   }
 
-  public get repo(): string {
+  private get repo(): string {
     return this._auth.repo;
   }
 
