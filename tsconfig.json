@@ -3,7 +3,7 @@
     "outDir": "dist",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "target": "ES2021",
+    "target": "ES2019",
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
