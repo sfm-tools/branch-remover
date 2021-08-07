@@ -1,4 +1,4 @@
-import { Branch, BranchDetails } from './Types';
+import { BranchDetails, BranchListItem } from './Types';
 
 export interface IProvider {
 
@@ -6,9 +6,9 @@ export interface IProvider {
 
   readonly repo: string;
 
-  getBranches(): Promise<Array<Branch>>;
+  getListBranches(): Promise<Array<BranchListItem>>;
 
-  getBranchDetails(branch: Branch): Promise<BranchDetails>;
+  getBranchDetails(branch: BranchListItem): Promise<BranchDetails>;
 
   branchIsExists(branchName: string): Promise<boolean>;
 

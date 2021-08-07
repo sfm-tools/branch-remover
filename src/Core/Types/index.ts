@@ -1,2 +1,2 @@
-export { Branch } from './Branch';
 export { BranchDetails } from './BranchDetails';
+export { BranchListItem } from './BranchListItem';

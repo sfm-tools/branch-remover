@@ -1,8 +1,8 @@
 import { Octokit } from '@octokit/rest';
 
 import {
-  Branch,
   BranchDetails,
+  BranchListItem,
   IProvider,
 } from '../../Core';
 import {
@@ -32,16 +32,16 @@ export class GitHubProvider implements IProvider {
 
     this._auth = auth;
 
-    this.getBranches = this.getBranches.bind(this);
+    this.getListBranches = this.getListBranches.bind(this);
     this.branchIsExists = this.branchIsExists.bind(this);
     this.removeBranch = this.removeBranch.bind(this);
     this.getPullRequestStatus = this.getPullRequestStatus.bind(this);
     this.getLastCommit = this.getLastCommit.bind(this);
   }
 
-  public async getBranches(): Promise<Array<Branch>> {
-    const result = new Array<Branch>();
-    const getList = async(page: number): Promise<Array<Branch>> => {
+  public async getListBranches(): Promise<Array<BranchListItem>> {
+    const result = new Array<BranchListItem>();
+    const getList = async(page: number): Promise<Array<BranchListItem>> => {
       const { data }= await this._client.repos.listBranches({
         owner: this.owner,
         repo: this.repo,
@@ -49,8 +49,8 @@ export class GitHubProvider implements IProvider {
         page,
       });
 
-      return data.map<Branch>(
-        (x): Branch => {
+      return data.map<BranchListItem>(
+        (x): BranchListItem => {
           return {
             name: x.name,
             lastCommitHash: x.commit.sha,
@@ -70,7 +70,7 @@ export class GitHubProvider implements IProvider {
     return result;
   }
 
-  public async getBranchDetails(branch: Branch): Promise<BranchDetails> {
+  public async getBranchDetails(branch: BranchListItem): Promise<BranchDetails> {
     const { data } = await this._client.search.issuesAndPullRequests({
       q: `repo:${this.owner}/${this.repo} is:pr head:${branch.name} hash:${branch.lastCommitHash}`,
       sort: 'updated',
