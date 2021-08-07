@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 
 import {
-  BranchDetails,
+  Branch,
   BranchListItem,
   IProvider,
 } from '../../Core';
@@ -70,7 +70,7 @@ export class GitHubProvider implements IProvider {
     return result;
   }
 
-  public async getBranchDetails(branchName: string, lastCommitHash?: string): Promise<BranchDetails> {
+  public async getBranch(branchName: string, lastCommitHash?: string): Promise<Branch> {
     const { data } = await this._client.search.issuesAndPullRequests({
       q: `repo:${this.owner}/${this.repo} is:pr head:${branchName} hash:${lastCommitHash}`,
       sort: 'updated',

@@ -1,4 +1,4 @@
-export type BranchDetails = {
+export type Branch = {
 
   name: string;
 
