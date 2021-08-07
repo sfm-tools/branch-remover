@@ -1,10 +1,12 @@
 import { Octokit } from '@octokit/rest';
 
-import { IProvider } from './IProvider';
 import {
-  Auth,
   Branch,
   BranchDetails,
+  IProvider,
+} from '../Core';
+import {
+  Auth,
   Commit,
   PullRequestStatus,
 } from './Types';
