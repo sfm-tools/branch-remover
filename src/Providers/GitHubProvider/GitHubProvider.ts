@@ -4,7 +4,7 @@ import {
   Branch,
   BranchDetails,
   IProvider,
-} from '../Core';
+} from '../../Core';
 import {
   Auth,
   Commit,
