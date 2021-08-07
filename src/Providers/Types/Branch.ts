@@ -2,6 +2,6 @@ export type Branch = {
 
   name: string;
 
-  protected: boolean;
+  lastCommitHash?: string;
 
-}
+};

@@ -32,22 +32,35 @@ export class GitHubProvider implements IProvider {
     this.deleteBranch = this.deleteBranch.bind(this);
   }
 
-  public async getBranches(page?: number): Promise<Array<Branch>> {
-    const { data }= await this._client.repos.listBranches({
-      owner: this.owner,
-      repo: this.repo,
-      page,
-      per_page: 100,
-    });
+  public async getBranches(): Promise<Array<Branch>> {
+    const result = new Array<Branch>();
+    const getList = async(page: number): Promise<Array<Branch>> => {
+      const { data }= await this._client.repos.listBranches({
+        owner: this.owner,
+        repo: this.repo,
+        per_page: 100,
+        page,
+      });
 
-    return data.map<Branch>(
-      (x): Branch => {
-        return {
-          name: x.name,
-          protected: x.protected,
-        };
-      }
-    );
+      return data.map<Branch>(
+        (x): Branch => {
+          return {
+            name: x.name,
+            lastCommitHash: x.commit.sha,
+          };
+        }
+      );
+    };
+
+    let page = 1;
+    let list = await getList(page);
+
+    while (list.length) {
+      result.push(...list);
+      list = await getList(++page);
+    }
+
+    return result;
   }
 
   public async branchIsExists(branchName: string): Promise<boolean> {
