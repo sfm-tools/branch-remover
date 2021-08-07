@@ -70,9 +70,9 @@ export class GitHubProvider implements IProvider {
     return result;
   }
 
-  public async getBranchDetails(branch: BranchListItem): Promise<BranchDetails> {
+  public async getBranchDetails(branchName: string, lastCommitHash?: string): Promise<BranchDetails> {
     const { data } = await this._client.search.issuesAndPullRequests({
-      q: `repo:${this.owner}/${this.repo} is:pr head:${branch.name} hash:${branch.lastCommitHash}`,
+      q: `repo:${this.owner}/${this.repo} is:pr head:${branchName} hash:${lastCommitHash}`,
       sort: 'updated',
       order: 'desc',
     });
@@ -93,13 +93,13 @@ export class GitHubProvider implements IProvider {
         mergedDate = status.mergedDate;
       }
     } else {
-      const commit = await this.getLastCommit(branch.name);
+      const commit = await this.getLastCommit(branchName);
 
       updatedDate = new Date(commit.date);
     }
 
     return {
-      name: branch.name,
+      name: branchName,
       merged,
       mergedDate,
       updatedDate,

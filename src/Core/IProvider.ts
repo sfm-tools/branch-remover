@@ -8,7 +8,7 @@ export interface IProvider {
 
   getListBranches(): Promise<Array<BranchListItem>>;
 
-  getBranchDetails(branch: BranchListItem): Promise<BranchDetails>;
+  getBranchDetails(branchName: string, lastCommitHash?: string): Promise<BranchDetails>;
 
   branchIsExists(branchName: string): Promise<boolean>;
 
