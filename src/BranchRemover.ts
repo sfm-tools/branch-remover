@@ -62,6 +62,9 @@ export class BranchRemover implements IBranchRemover {
         }
       );
 
+      // NOTE: we have to check before getting branch details
+      // because, depending on the provider, there may be limits on the number of requests;
+      // for example, GitHub currently allows no more than 5,000 requests per hour for free
       const ignored = await ignore({
         branchName: name,
         context,
