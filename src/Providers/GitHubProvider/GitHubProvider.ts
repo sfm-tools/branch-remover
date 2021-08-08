@@ -25,6 +25,10 @@ export class GitHubProvider implements IProvider {
     return this._auth.repo;
   }
 
+  public get name(): string {
+    return 'GitHub';
+  }
+
   constructor(auth: Auth) {
     this._client = new Octokit({
       auth: auth.token,
