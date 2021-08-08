@@ -1,11 +1,10 @@
 import { IProvider } from './IProvider';
+import { BranchRemoverOptions } from './Types';
 
 export interface IBranchRemover {
 
   readonly provider: IProvider;
 
-  test(): Promise<void>;
-
-  execute(): Promise<void>;
+  execute(options: BranchRemoverOptions, test?: boolean): Promise<void>;
 
 }
