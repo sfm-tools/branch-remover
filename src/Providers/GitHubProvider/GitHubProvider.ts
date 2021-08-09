@@ -37,7 +37,6 @@ export class GitHubProvider implements IProvider {
     this._auth = auth;
 
     this.getListBranches = this.getListBranches.bind(this);
-    this.branchIsExists = this.branchIsExists.bind(this);
     this.removeBranch = this.removeBranch.bind(this);
     this.getPullRequestStatus = this.getPullRequestStatus.bind(this);
     this.getLastCommit = this.getLastCommit.bind(this);
@@ -108,16 +107,6 @@ export class GitHubProvider implements IProvider {
       mergedDate,
       updatedDate,
     };
-  }
-
-  public async branchIsExists(branchName: string): Promise<boolean> {
-    const response = !!(await this._client.repos.getBranch({
-      owner: this.owner,
-      repo: this.repo,
-      branch: branchName,
-    })).data;
-
-    return response;
   }
 
   public async removeBranch(branchName: string): Promise<void> {

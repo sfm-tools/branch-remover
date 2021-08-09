@@ -11,8 +11,6 @@ export interface IProvider {
 
   getBranch(branchName: string, lastCommitHash?: string): Promise<Branch>;
 
-  branchIsExists(branchName: string): Promise<boolean>;
-
   removeBranch(branchName: string): Promise<void>;
 
 }
