@@ -52,8 +52,14 @@ export class BranchRemoverOptionsBuilder {
 
     return {
       ignore: (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
-        if (ignore && ignore.test(e.branchName)) {
-          return Promise.resolve(true);
+        if (ignore) {
+          // When a regex has the global flag set, test() will advance the lastIndex of the regex.
+          // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test#using_test_on_a_regex_with_the_global_flag
+          ignore.lastIndex = 0;
+
+          if (ignore.test(e.branchName)) {
+            return Promise.resolve(true);
+          }
         }
 
         return Promise.resolve(false);
@@ -141,7 +147,7 @@ export class BranchRemoverOptionsBuilder {
             result = false;
 
             logger.debug(
-              'The user has forbidden the removing of branch "{branch.name}.',
+              'The user has forbidden the removing of branch "{branch.name}".',
               {
                 branch,
               }
