@@ -30,6 +30,14 @@ export class GitHubProvider implements IProvider {
   }
 
   constructor(auth: Auth) {
+    Object.getOwnPropertyNames(new Auth(null, null, null)).forEach(
+      (x: string): void => {
+        if (!auth[x]) {
+          throw new Error(`The "${x}" property is required. The value must not be empty.`);
+        }
+      }
+    );
+
     this._client = new Octokit({
       auth: auth.token,
     });

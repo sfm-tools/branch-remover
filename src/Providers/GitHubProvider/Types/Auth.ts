@@ -1,4 +1,4 @@
-export type Auth = {
+export class Auth {
 
   /**
    * Username or organization name.
@@ -8,7 +8,7 @@ export type Auth = {
    *                    ^^^^^^^^  ^^^^^^^^^^^^^^
    *                    owner     repo
    */
-  owner: string;
+  public readonly owner: string;
 
   /**
    * Repository name.
@@ -18,13 +18,19 @@ export type Auth = {
    *                    ^^^^^^^^  ^^^^^^^^^^^^^^
    *                    owner     repo
    */
-  repo: string;
+   public readonly repo: string;
 
   /**
    * GitHub access token.
    *
    * @see https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token
    */
-  token: string;
+  public readonly token: string;
 
-};
+  constructor(owner: string, repo: string, token: string) {
+    this.owner = owner;
+    this.repo = repo;
+    this.token = token;
+  }
+
+}
