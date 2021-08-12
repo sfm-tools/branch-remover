@@ -14,8 +14,8 @@ export const helpCommand = (): void => {
     return {
       [`--${x.name}`]:
       [
-        x.aliases?.map((x: string): string => `--${x}`).join('\n') ?? '-',
-        x.description?.join('\n') ?? '-',
+        x.aliases?.map((x: string): string => `--${x}`).join('\n') ?? chalk.italic('n/a'),
+        x.description?.join('\n') ?? chalk.italic('n/a'),
       ],
     };
   };
