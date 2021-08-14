@@ -83,6 +83,12 @@ export class BranchRemover implements IBranchRemover {
       );
 
       if (!branch) {
+        logger.info(
+          'Skip branch "{branch}", because no detailed information.',
+          {
+            branch: name,
+          }
+        );
         continue;
       }
 
