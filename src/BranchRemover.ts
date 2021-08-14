@@ -6,9 +6,6 @@ import {
   BranchRemoverOptionsIgnoreArgs,
   BranchRemoverOptionsIgnoreFunction,
   BranchRemoverOptionsIgnoreType,
-  BranchRemoverOptionsRemoveArgs,
-  BranchRemoverOptionsRemoveFunction,
-  BranchRemoverOptionsRemoveType,
   IBranchRemover,
   IProvider,
   Logger,
@@ -32,7 +29,7 @@ export class BranchRemover implements IBranchRemover {
     const start = new Date();
     const logger = options.logger || new Logger();
     const ignore = this.buildIgnoreFunction(options.ignore);
-    const remove = this.buildRemoveFunction(options.remove);
+    const remove = options.remove;
     const context: BranchRemoverContext = {
       test,
       logger,
@@ -159,38 +156,6 @@ export class BranchRemover implements IBranchRemover {
     }
 
     return (): Promise<boolean> => Promise.resolve(false);
-  }
-
-  private buildRemoveFunction(value: BranchRemoverOptionsRemoveType): BranchRemoverOptionsRemoveFunction {
-    if (typeof value === 'function') {
-      return value;
-    }
-
-    if (typeof value === 'string') {
-      return ({ branch }: BranchRemoverOptionsRemoveArgs): Promise<boolean> => {
-        return Promise.resolve(
-          branch.name === value
-        );
-      };
-    }
-
-    if (value instanceof RegExp) {
-      return ({ branch }: BranchRemoverOptionsRemoveArgs): Promise<boolean> => {
-        return Promise.resolve(
-          value.test(branch.name)
-        );
-      };
-    }
-
-    if (Array.isArray(value)) {
-      return ({ branch }: BranchRemoverOptionsRemoveArgs): Promise<boolean> => {
-        return Promise.resolve(
-          value.includes(branch.name)
-        );
-      };
-    }
-
-    return ({ branch }): Promise<boolean> => Promise.resolve(branch.merged);
   }
 
 }

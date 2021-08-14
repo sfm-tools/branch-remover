@@ -39,5 +39,3 @@ export type BranchRemoverOptionsRemoveArgs = {
 };
 
 export type BranchRemoverOptionsRemoveFunction = { (e: BranchRemoverOptionsRemoveArgs): Promise<boolean> };
-
-export type BranchRemoverOptionsRemoveType = string | Array<string> | RegExp | BranchRemoverOptionsRemoveFunction;
