@@ -8,7 +8,9 @@ import {
 
 export class FakeProvider implements IProvider {
 
-  private _branches = new Array<Branch>();
+  private _list = new Array<BranchListItem>();
+
+  public details = new Array<Branch>();
 
   public get name(): string {
     return 'Fake';
@@ -27,14 +29,19 @@ export class FakeProvider implements IProvider {
           let name = faker.git.branch();
 
           while (
-            this._branches.find(
+            this.details.find(
               (x: Branch): boolean => x.name === name
             )
           ) {
             name = faker.git.branch();
           }
 
-          this._branches.push({
+          this._list.push({
+            name,
+            lastCommitHash: faker.git.commitSha,
+          });
+
+          this.details.push({
             name,
             merged,
             mergedDate,
@@ -45,20 +52,13 @@ export class FakeProvider implements IProvider {
   }
 
   public getListBranches(): Promise<Array<BranchListItem>> {
-    const result = this._branches.map(
-      ({ name }: Branch): BranchListItem => {
-        return {
-          name,
-          lastCommitHash: faker.git.commitSha(),
-        };
-      }
-    );
-
-    return Promise.resolve(result);
+    return Promise.resolve([
+      ...this._list
+    ]);
   }
 
   public getBranch(name: string, lastCommitHash?: string): Promise<Branch> {
-    const branch = this._branches.find(
+    const branch = this.details.find(
       (x: Branch): boolean => x.name === name
     );
 
@@ -66,11 +66,17 @@ export class FakeProvider implements IProvider {
   }
 
   public removeBranch(name: string): Promise<void> {
-    const index = this._branches.findIndex(
+    const detailsIndex = this.details.findIndex(
       (x: Branch): boolean => x.name === name
     );
 
-    this._branches.splice(index, 1);
+    this.details.splice(detailsIndex, 1);
+
+    const listIndex = this._list.findIndex(
+      (x: BranchListItem): boolean => x.name === name
+    );
+
+    this._list.splice(listIndex, 1);
 
     return Promise.resolve();
   }
