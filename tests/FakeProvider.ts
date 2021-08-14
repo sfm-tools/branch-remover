@@ -8,6 +8,8 @@ import {
 
 export class FakeProvider implements IProvider {
 
+  private _branches = new Array<Branch>();
+
   public get name(): string {
     return 'Fake';
   }
@@ -15,13 +17,38 @@ export class FakeProvider implements IProvider {
   constructor() {
     this.getListBranches = this.getListBranches.bind(this);
     this.removeBranch = this.removeBranch.bind(this);
+
+    Array.from(new Array(100))
+      .forEach(
+        (): void => {
+          const updatedDate: Date = faker.date.past(2, new Date());
+          const merged = faker.datatype.boolean();
+          const mergedDate: Date = merged ? updatedDate : null;
+          let name = faker.git.branch();
+
+          while (
+            this._branches.find(
+              (x: Branch): boolean => x.name === name
+            )
+          ) {
+            name = faker.git.branch();
+          }
+
+          this._branches.push({
+            name,
+            merged,
+            mergedDate,
+            updatedDate,
+          });
+        }
+      );
   }
 
   public getListBranches(): Promise<Array<BranchListItem>> {
-    const result = Array.from(new Array(100)).map(
-      (): BranchListItem => {
+    const result = this._branches.map(
+      ({ name }: Branch): BranchListItem => {
         return {
-          name: faker.git.branch(),
+          name,
           lastCommitHash: faker.git.commitSha(),
         };
       }
@@ -31,21 +58,20 @@ export class FakeProvider implements IProvider {
   }
 
   public getBranch(name: string, lastCommitHash?: string): Promise<Branch> {
-    const updatedDate: Date = faker.date.past(2, new Date());
-    const merged = faker.datatype.boolean();
-    const mergedDate: Date = merged ? updatedDate : null;
+    const branch = this._branches.find(
+      (x: Branch): boolean => x.name === name
+    );
 
-    const result = {
-      name,
-      merged,
-      mergedDate,
-      updatedDate,
-    };
-
-    return Promise.resolve(result);
+    return Promise.resolve(branch);
   }
 
-  public removeBranch(branchName: string): Promise<void> {
+  public removeBranch(name: string): Promise<void> {
+    const index = this._branches.findIndex(
+      (x: Branch): boolean => x.name === name
+    );
+
+    this._branches.splice(index, 1);
+
     return Promise.resolve();
   }
 
