@@ -21,6 +21,10 @@ let provider: IProvider;
 
 switch (params.provider.toLowerCase()) {
   case 'github': {
+    if (!params['github']) {
+      throw new Error('Expects parameter github.auth or parameters github.owner, github.repo and github.token.');
+    }
+
     let auth: Auth = null;
     if (params['github']['auth']) {
       auth = require(params['github']['auth']);
