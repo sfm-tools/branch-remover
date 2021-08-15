@@ -23,7 +23,7 @@
   "engines": {
     "node": ">=12.18.3"
   },
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "start": "node ./node_modules/ts-node index.ts",
     "build": "rimraf dist/ && tsc",
