@@ -12,13 +12,13 @@ The easiest way to remove unneeded branches in your GitHub repos.
 ## Install
 
 ```bash
-npm install -g branch-remover
+npm install --global branch-remover
 ```
 
 ## Usage
 
 ```bash
-npx branch-remover --github.owner %owner% --github.repo %repo% --github.token %token% --ignore "^(master|main)$"
+branch-remover --github.owner %owner% --github.repo %repo% --github.token %token% --ignore "^(master|main)$"
 ```
 
 Use your access options instead `%owner%`, `%repo%`, and `%token%`.
@@ -48,7 +48,7 @@ You can also use a separate JSON file with access parameters. For example:
 You can specify the path to this file using the github.auth parameter:
 
 ```bash
-npx branch-remover --github.auth ./somename.json --ignore "^(master|main)$"
+branch-remover --github.auth ./somename.json --ignore "^(master|main)$"
 ```
 
 ## Options
@@ -62,11 +62,11 @@ Displays the version number of the application.
 Displays help information.
 
 You can see additional information for each individual option:
-`npx branch-remover --help %parameterName%`.
+`branch-remover --help %parameterName%`.
 
 For example:
-* `npx branch-remover --help help`
-* `npx branch-remover --help github.auth`
+* `branch-remover --help help`
+* `branch-remover --help github.auth`
 
 ### --test
 
@@ -89,7 +89,7 @@ A regex pattern that allows specifying branches to ignore.
 For example, ignore `master` and `main` branches:
 
 ```bash
-npx branch-remover --github.auth ./auth.json --ignore "^(master|main)$"
+branch-remover --github.auth ./auth.json --ignore "^(master|main)$"
 ```
 
 ### --merged
@@ -104,7 +104,7 @@ Default: `all` (all merged branches).
 
 
 ```bash
-npx branch-remover --github.auth ./auth.json --merged "2 months"
+branch-remover --github.auth ./auth.json --merged "2 months"
 ```
 
 ### --stale
