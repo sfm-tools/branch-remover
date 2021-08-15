@@ -140,8 +140,9 @@ export class BranchRemoverOptionsBuilder {
             );
           };
 
+          const now = new Date();
           const duration = humanizeDuration(
-            new Date().getTime() - (branch.mergedDate ?? branch.updatedDate).getTime(),
+            now.getTime() - (branch.mergedDate ?? branch.updatedDate ?? now).getTime(),
             {
               largest: 1,
             }
