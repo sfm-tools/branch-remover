@@ -334,9 +334,9 @@ describe('BranchRemoverOptionsBuilder', () => {
           },
         });
 
-        sinon.assert.calledWithExactly(
+        sinon.assert.calledWith(
           readlineStub.question,
-          'Do you want to remove merged branch "issue-100"? [Y/n]',
+          'Do you want to remove merged branch "issue-100"? Merged 0 seconds ago [Y/n] ',
           sinon.match.func
         );
 
@@ -376,9 +376,9 @@ describe('BranchRemoverOptionsBuilder', () => {
           branch,
         });
 
-        sinon.assert.calledWithExactly(
+        sinon.assert.calledWith(
           readlineStub.question,
-          'Do you want to remove merged branch "issue-100"? [Y/n]',
+          'Do you want to remove merged branch "issue-100"? Merged 0 seconds ago [Y/n] ',
           sinon.match.func
         );
 
