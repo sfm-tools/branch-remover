@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import parse from 'parse-duration';
 
 import { BranchRemover } from './BranchRemover';
