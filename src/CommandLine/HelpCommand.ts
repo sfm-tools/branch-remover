@@ -26,7 +26,8 @@ export const helpCommand = (): void => {
     const findName = (params.help as unknown).toString().trim();
     const param = schema.find(
       (x: ParameterInfo): boolean => {
-        return x.name === findName;
+        return x.name === findName
+          || x.aliases?.includes(findName);
       }
     );
 
