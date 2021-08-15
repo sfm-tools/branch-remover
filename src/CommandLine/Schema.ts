@@ -105,7 +105,7 @@ export const schema: Array<ParameterInfo> = [
     name: 'github.auth',
     description: [
       'The path to the JSON file that contains the repository access parameters.',
-      'Required only for provider "github", when the parameters are not specified separately.',
+      'Required only for provider "github", when the access parameters are not specified separately.',
     ],
     examples: [
       {
