@@ -17,6 +17,10 @@ npm install --global branch-remover
 
 ## Usage
 
+**:warning: Disclaimer: Using this tool, you are aware that you may lose important data and fully accept responsibility for this.**
+
+**:warning: Always carefully check your options and always test program execution with the `--test` option.**
+
 ```bash
 branch-remover --github.owner %owner% --github.repo %repo% --github.token %token% --ignore "^(master|main)$"
 ```
