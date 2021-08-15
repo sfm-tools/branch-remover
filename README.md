@@ -80,6 +80,7 @@ Specifies the provider name. Expected values: `github` (default).
 ### --quiet
 
 The presence of this option disables the confirmation request to remove branches.
+
 **Matching branches will be removed immediately. Be careful when using this option!**
 
 ### --ignore
@@ -120,26 +121,31 @@ Path to custom js-file containing branch processing parameters.
 ### --github.auth
 
 The path to the JSON file that contains the repository access parameters.
+
 Required only for provider "github", when the access parameters are not specified separately.
 
 ### --github.auth
 
 The path to the JSON file that contains the repository access parameters.
+
 Required only for provider "github", when the access parameters are not specified separately.
 
 ### --github.token
 
-GitHub access token - https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token │
+GitHub access token - https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token
+
 Required only for provider "github", when `--github.auth` is not specified.
 
 ### --github.owner
 
 Username or organization name on GitHub. For example: `sfm-tools`.
+
 Required only for provider "github", when `--github.auth` is not specified.
 
 ### --github.repo
 
 Repository name on GitHub. For example: `branch-remover`.
+
 Required only for provider "github", when `--github.auth` is not specified.
 
 ## License
