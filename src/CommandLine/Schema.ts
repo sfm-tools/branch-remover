@@ -1,7 +1,7 @@
 import { Auth } from '../Providers/GitHubProvider';
 import { ParameterInfo } from './ParameterInfo';
 
-const command = 'npx branch-remover';
+const command = 'branch-remover';
 const auth = new Auth('sfm-tools', 'branch-remover', 'a1ee8b13');
 
 export const schema: Array<ParameterInfo> = [
