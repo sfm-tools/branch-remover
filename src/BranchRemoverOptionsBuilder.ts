@@ -1,3 +1,4 @@
+import humanizeDuration from 'humanize-duration';
 import readline from 'readline';
 
 import {
@@ -139,8 +140,15 @@ export class BranchRemoverOptionsBuilder {
             );
           };
 
+          const duration = humanizeDuration(
+            new Date().getTime() - (branch.mergedDate ?? branch.updatedDate).getTime(),
+            {
+              largest: 1,
+            }
+          );
+          const date = `${branch.merged ? 'Merged' : 'Updated'} ${duration} ago`;
           const answer = await question(
-            `Do you want to remove ${branch.merged ? 'merged' : 'unmerged'} branch "${branch.name}"? [Y/n]`,
+            `Do you want to remove ${branch.merged ? 'merged' : 'unmerged'} branch "${branch.name}"? ${date} [Y/n] `,
           );
 
           if (!/y(es|)+/gi.test(answer || 'yes')) {
