@@ -102,25 +102,48 @@ export const schema: Array<ParameterInfo> = [
     ],
   },
   {
+    name: 'github.auth',
+    description: [
+      'The path to the JSON file that contains the repository access parameters.',
+      'Required only for provider "github", when the parameters are not specified separately.',
+    ],
+    examples: [
+      {
+        title: 'The following example shows the structure of a JSON file containing repository access settings:',
+        example: `{
+    "github": {
+      "token": "%YOUR GITHUB TOKEN HERE%",
+      "owner": "%GITHUB USERNAME OR ORGANIZATION NAME HERE%",
+      "repo": "%REPOSITORY NAME HERE%"
+    }
+  }`,
+      },
+      {
+        title: 'The following example shows the use of a file containing parameters for accessing the repository:',
+        example: `${command} --provider github --github.auth ./.auth.json`,
+      },
+    ],
+  },
+  {
     name: 'github.token',
     description: [
       'GitHub access token.',
       'https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token',
-      'Required only for provider "github".',
+      'Required only for provider "github", when github.auth is not specified.',
     ],
   },
   {
     name: 'github.owner',
     description: [
       'Username or organization name on GitHub. For example: sfm-tools.',
-      'Required only for provider "github".',
+      'Required only for provider "github", when github.auth is not specified.',
     ],
   },
   {
     name: 'github.repo',
     description: [
       'Repository name on GitHub. For example: branch-remover.',
-      'Required only for provider "github".',
+      'Required only for provider "github", when github.auth is not specified.',
     ],
   },
 ];

@@ -4,7 +4,7 @@ import { BranchRemover } from './BranchRemover';
 import { BranchRemoverOptionsBuilder } from './BranchRemoverOptionsBuilder';
 import { helpCommand, params } from './CommandLine';
 import { BranchRemoverOptions, IProvider } from './Core';
-import { GitHubProvider } from './Providers/GitHubProvider';
+import { Auth, GitHubProvider } from './Providers/GitHubProvider';
 
 if (params.version) {
   const { version } = require('../package.json');
@@ -21,21 +21,28 @@ let provider: IProvider;
 
 switch (params.provider.toLowerCase()) {
   case 'github': {
-    const requiredParams = [
-      'token',
-      'owner',
-      'repo',
-    ];
+    let auth: Auth = null;
+    if (params['github']['auth']) {
+      auth = require(params['github']['auth']);
+    } else {
+      const requiredParams = [
+        'token',
+        'owner',
+        'repo',
+      ];
 
-    requiredParams.forEach(
-      (x: string): void => {
-        if (!params['github'][x]) {
-          throw new Error(`"github.${x}" is required. The value must not be empty.`);
+      requiredParams.forEach(
+        (x: string): void => {
+          if (!params['github'][x]) {
+            throw new Error(`"github.${x}" is required. The value must not be empty.`);
+          }
         }
-      }
-    );
+      );
 
-    provider = new GitHubProvider(params['github']);
+      auth = params['github'];
+    }
+
+    provider = new GitHubProvider(auth);
     break;
   }
 
