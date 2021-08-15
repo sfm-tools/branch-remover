@@ -24,6 +24,7 @@
     "node": ">=12.18.3"
   },
   "main": "dist/index.js",
+  "bin": "dist/index.js",
   "scripts": {
     "start": "node ./node_modules/ts-node index.ts",
     "build": "rimraf dist/ && tsc",
