@@ -145,6 +145,7 @@ export class BranchRemoverOptionsBuilder {
             now.getTime() - (branch.mergedDate ?? branch.updatedDate ?? now).getTime(),
             {
               largest: 1,
+              round: true,
             }
           );
           const date = `${branch.merged ? 'Merged' : 'Updated'} ${duration} ago`;
