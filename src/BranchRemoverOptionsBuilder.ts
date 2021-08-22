@@ -1,7 +1,10 @@
+import chalk from 'chalk';
+import Table from 'cli-table';
 import humanizeDuration from 'humanize-duration';
 import readline from 'readline';
 
 import {
+  Branch,
   BranchRemoverOptions,
   BranchRemoverOptionsIgnoreArgs,
   BranchRemoverOptionsRemoveArgs,
@@ -149,6 +152,9 @@ export class BranchRemoverOptionsBuilder {
             }
           );
           const date = `${branch.merged ? 'Merged' : 'Updated'} ${duration} ago`;
+
+          this.displayBranchInfo(branch);
+
           const answer = await question(
             `Do you want to remove ${branch.merged ? 'merged' : 'unmerged'} branch "${branch.name}"? ${date} [Y/n] `,
           );
@@ -168,6 +174,55 @@ export class BranchRemoverOptionsBuilder {
         return result;
       },
     };
+  }
+
+  private displayBranchInfo(branch: Branch): void {
+    const now = new Date();
+    const table = new Table();
+
+    table.push(
+      {
+        'Branch': [
+          branch.name,
+        ]
+      },
+      {
+        'State': [
+          branch.merged ? chalk.green('merged') : chalk.red('unmerged'),
+        ]
+      },
+      {
+        'Merged date': [
+          branch.merged
+            ? humanizeDuration(
+              now.getTime() - branch.mergedDate.getTime(),
+              {
+                largest: 1,
+                round: true,
+              }
+            ) + ` ago (${branch.mergedDate.toString()})`
+            : 'n/a',
+        ]
+      },
+      {
+        'Updated date': [
+          humanizeDuration(
+            now.getTime() - branch.updatedDate.getTime(),
+            {
+              largest: 1,
+              round: true,
+            }
+          ) + ` ago (${branch.updatedDate.toString()})`,
+        ]
+      },
+      {
+        'Has unmerged changes': [
+          branch.hasUncommittedChanges ? chalk.red('yes') : 'no',
+        ]
+      },
+    );
+
+    console.log(table.toString());
   }
 
   private getRegExpOrNull(value: string): RegExp {
