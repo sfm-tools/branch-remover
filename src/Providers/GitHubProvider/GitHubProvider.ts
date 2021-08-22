@@ -83,7 +83,7 @@ export class GitHubProvider implements IProvider {
 
   public async getBranch(branchName: string, lastCommitHash?: string): Promise<Branch> {
     const { data } = await this._client.search.issuesAndPullRequests({
-      q: `repo:${this.owner}/${this.repo} is:pr head:${branchName} hash:${lastCommitHash}`,
+      q: `repo:${this.owner}/${this.repo} is:pr head:${branchName}` + (lastCommitHash ? ` hash:${lastCommitHash}` : ''),
       sort: 'updated',
       order: 'desc',
     });
