@@ -1,4 +1,4 @@
-import { Octokit } from '@octokit/rest';
+import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 
 import {
   Branch,
@@ -91,15 +91,27 @@ export class GitHubProvider implements IProvider {
     let updatedDate: Date = null;
     let mergedDate: Date = null;
     let merged = false;
+    let hasUncommittedChanges = false;
+    let status: PullRequestStatus;
+    let item: RestEndpointMethodTypes['search']['issuesAndPullRequests']['response']['data']['items'][0];
 
-    const item = data.items?.[0];
+    if (data.items.length) {
+      for (const x of data.items) {
+        status = await this.getPullRequestStatus(x.number);
+
+        if (status.sourceBranchName === branchName) {
+          item = x;
+          updatedDate = new Date(status.updatedDate);
+          hasUncommittedChanges = updatedDate > status.mergedDate;
+          break;
+        }
+      }
+    }
 
     if (item) {
       updatedDate = new Date(item.updated_at);
 
       if (item.state === 'closed') {
-        const status = await this.getPullRequestStatus(item.number);
-
         merged = status.merged;
         mergedDate = status.mergedDate;
       }
@@ -114,6 +126,7 @@ export class GitHubProvider implements IProvider {
       merged,
       mergedDate,
       updatedDate,
+      hasUncommittedChanges,
     };
   }
 
@@ -139,6 +152,7 @@ export class GitHubProvider implements IProvider {
       mergeable: data.mergeable,
       mergeableState: data.mergeable_state as any,
       mergedDate: data.merged_at && new Date(data.merged_at),
+      mergeCommitHash: data.merge_commit_sha,
       closedDate: data.closed_at && new Date(data.closed_at),
       updatedDate: data.updated_at && new Date(data.updated_at),
       createdDate: new Date(data.created_at),

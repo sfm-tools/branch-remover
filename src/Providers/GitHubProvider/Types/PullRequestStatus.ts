@@ -13,6 +13,8 @@ export type PullRequestStatus = {
 
   mergeableState: 'clean' | 'dirty' | 'unstable' | 'unknown';
 
+  mergeCommitHash?: string;
+
   createdDate: Date;
 
   updatedDate?: Date;

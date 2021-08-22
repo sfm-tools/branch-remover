@@ -8,4 +8,6 @@ export type Branch = {
 
   updatedDate: Date;
 
+  hasUncommittedChanges: boolean;
+
 };
