@@ -143,6 +143,7 @@ describe('BranchRemoverOptionsBuilder', () => {
             name: 'issue-100',
             updatedDate: new Date(),
             mergedDate: new Date(),
+            hasUncommittedChanges: false,
           },
         })
       ).to.be.true;
@@ -160,6 +161,7 @@ describe('BranchRemoverOptionsBuilder', () => {
             merged: false,
             name: 'issue-100',
             updatedDate: new Date(),
+            hasUncommittedChanges: true,
           },
         })
       ).to.be.false;
@@ -183,6 +185,7 @@ describe('BranchRemoverOptionsBuilder', () => {
               name: 'issue-100',
               updatedDate: new Date(),
               mergedDate: new Date(2021, 7, 8, 11, 59, 59),
+              hasUncommittedChanges: true,
             },
           })
         ).to.be.true;
@@ -206,6 +209,7 @@ describe('BranchRemoverOptionsBuilder', () => {
               name: 'issue-100',
               updatedDate: new Date(),
               mergedDate: mergedDate,
+              hasUncommittedChanges: true,
             },
           })
         ).to.be.true;
@@ -228,6 +232,7 @@ describe('BranchRemoverOptionsBuilder', () => {
               name: 'issue-100',
               updatedDate: new Date(),
               mergedDate: new Date(2021, 7, 8, 12, 0, 1),
+              hasUncommittedChanges: true,
             },
           })
         ).to.be.false;
@@ -251,6 +256,7 @@ describe('BranchRemoverOptionsBuilder', () => {
               merged: false,
               name: 'issue-100',
               updatedDate: new Date(2021, 7, 8, 11, 59, 59),
+              hasUncommittedChanges: true,
             },
           })
         ).to.be.true;
@@ -271,6 +277,7 @@ describe('BranchRemoverOptionsBuilder', () => {
             context,
             branch: {
               merged: false,
+              hasUncommittedChanges: true,
               name: 'issue-100',
               updatedDate,
             },
@@ -294,6 +301,7 @@ describe('BranchRemoverOptionsBuilder', () => {
               merged: false,
               name: 'issue-100',
               updatedDate: new Date(2021, 7, 8, 12, 0, 1),
+              hasUncommittedChanges: true,
             },
           })
         ).to.be.false;
@@ -331,6 +339,7 @@ describe('BranchRemoverOptionsBuilder', () => {
             name: 'issue-100',
             updatedDate: new Date(),
             mergedDate: new Date(),
+            hasUncommittedChanges: false,
           },
         });
 
@@ -355,6 +364,7 @@ describe('BranchRemoverOptionsBuilder', () => {
           // null - to avoid problems with different representation of dates
           updatedDate: null,
           mergedDate: null,
+          hasUncommittedChanges: false,
         };
 
         const readlineStub = {

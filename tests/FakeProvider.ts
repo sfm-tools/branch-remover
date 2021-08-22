@@ -26,6 +26,7 @@ export class FakeProvider implements IProvider {
           const updatedDate: Date = faker.date.past(2, new Date());
           const merged = faker.datatype.boolean();
           const mergedDate: Date = merged ? updatedDate : null;
+          const hasUncommittedChanges = mergedDate > mergedDate;
           let name = faker.git.branch();
 
           while (
@@ -46,6 +47,7 @@ export class FakeProvider implements IProvider {
             merged,
             mergedDate,
             updatedDate,
+            hasUncommittedChanges,
           });
         }
       );
