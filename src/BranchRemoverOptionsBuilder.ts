@@ -193,7 +193,7 @@ export class BranchRemoverOptionsBuilder {
       },
       {
         'Merged date': [
-          branch.merged
+          branch.merged && branch.mergedDate
             ? humanizeDuration(
               now.getTime() - branch.mergedDate.getTime(),
               {
@@ -207,12 +207,12 @@ export class BranchRemoverOptionsBuilder {
       {
         'Updated date': [
           humanizeDuration(
-            now.getTime() - branch.updatedDate.getTime(),
+            now.getTime() - branch.updatedDate?.getTime(),
             {
               largest: 1,
               round: true,
             }
-          ) + ` ago (${branch.updatedDate.toString()})`,
+          ) + ` ago (${branch.updatedDate?.toString()})`,
         ]
       },
       {
