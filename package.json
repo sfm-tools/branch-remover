@@ -26,7 +26,7 @@
   "main": "dist/index.js",
   "bin": "dist/index.js",
   "scripts": {
-    "start": "node ./node_modules/ts-node index.ts",
+    "start": "node ./node_modules/ts-node/dist/bin.js src/index.ts",
     "build": "rimraf dist/ && tsc",
     "test": "mocha -r ts-node/register tests/*.ts tests/**/*.ts",
     "nyc": "nyc --reporter=html mocha -r ts-node/register tests/*.ts tests/**/*.ts",
