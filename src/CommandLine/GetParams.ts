@@ -24,6 +24,7 @@ export const params = minimist(
       'version',
       'test',
       'quiet',
+      'yes',
     ],
     string: [
       'provider',
@@ -37,6 +38,7 @@ export const params = minimist(
       merged: 'all',
       stale: '',
       quiet: false,
+      yes: false,
     },
   }
 ) as CommandLineParams;
