@@ -10,4 +10,6 @@ export type Branch = {
 
   hasUncommittedChanges: boolean;
 
+  url?: string;
+
 };

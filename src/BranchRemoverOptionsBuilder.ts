@@ -222,6 +222,14 @@ export class BranchRemoverOptionsBuilder {
       },
     );
 
+    if (branch.url) {
+      table.push({
+        'Url': [
+          branch.url,
+        ]
+      });
+    }
+
     console.log(table.toString());
   }
 

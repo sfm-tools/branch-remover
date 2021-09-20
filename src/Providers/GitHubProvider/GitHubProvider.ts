@@ -127,6 +127,7 @@ export class GitHubProvider implements IProvider {
       mergedDate,
       updatedDate,
       hasUncommittedChanges,
+      url: `https://github.com/${this._auth.owner}/${this._auth.repo}/tree/${branchName}`,
     };
   }
 
