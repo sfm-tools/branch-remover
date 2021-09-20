@@ -48,6 +48,7 @@ export class FakeProvider implements IProvider {
             mergedDate,
             updatedDate,
             hasUncommittedChanges,
+            url: `https://example.org/tree/${name}`,
           });
         }
       );
