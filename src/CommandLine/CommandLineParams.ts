@@ -15,6 +15,11 @@ export type CommandLineParams = {
   quiet?: boolean;
 
   /**
+   * Indicates that the default answer should be YES.
+   */
+  yes?: boolean;
+
+  /**
    * API provider for working with branches.
    */
   provider?: string;

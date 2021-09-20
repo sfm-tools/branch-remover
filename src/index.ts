@@ -75,6 +75,10 @@ if (params.config) {
     builder.stale(new Date(now.getTime() - milliseconds));
   }
 
+  if (params.yes) {
+    builder.yes();
+  }
+
   builder.ignore(params.ignore);
 
   options = builder.build();

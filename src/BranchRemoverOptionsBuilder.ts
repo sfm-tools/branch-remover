@@ -14,6 +14,8 @@ export class BranchRemoverOptionsBuilder {
 
   private _quiet: boolean = false;
 
+  private _yes: boolean = false;
+
   private _mergedDate: Date = null;
 
   private _staleDate: Date = null;
@@ -33,6 +35,11 @@ export class BranchRemoverOptionsBuilder {
     return this;
   }
 
+  public yes(): this {
+    this._yes = true;
+    return this;
+  }
+
   public merged(date: Date): this {
     this._mergedDate = date;
     return this;
@@ -49,6 +56,8 @@ export class BranchRemoverOptionsBuilder {
   }
 
   public build(): BranchRemoverOptions {
+    const displayDefaultAnswer = this._yes ? '[Y/n]' : '[y/N]';
+    const defaultAnswer = this._yes ? 'yes' : 'no';
     const ignore = this.getRegExpOrNull(this._ignore);
     const mergedDate = this._mergedDate;
     const staleDate = this._staleDate;
@@ -156,10 +165,10 @@ export class BranchRemoverOptionsBuilder {
           this.displayBranchInfo(branch);
 
           const answer = await question(
-            `Do you want to remove ${branch.merged ? 'merged' : 'unmerged'} branch "${branch.name}"? ${date} [Y/n] `,
+            `Do you want to remove ${branch.merged ? 'merged' : 'unmerged'} branch "${branch.name}"? ${date} ${displayDefaultAnswer} `,
           );
 
-          if (!/y(es|)+/gi.test(answer || 'yes')) {
+          if (!/y(es|)+/gi.test(answer || defaultAnswer)) {
             result = false;
 
             logger.debug(

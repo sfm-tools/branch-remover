@@ -55,13 +55,35 @@ export const schema: Array<ParameterInfo> = [
   },
   {
     name: 'quiet',
-    aliases: ['q', 'yes', 'y'],
+    aliases: ['q'],
     description: [
       'The presence of this parameter disables the confirmation request to remove branches.',
       'Matching branches will be removed immediately.',
     ],
     examples: [{
       example: `${command} --provider github --github.token ${auth.token} --github.owner ${auth.owner} --github.repo ${auth.repo} --quiet`,
+    }],
+  },
+  {
+    name: 'yes',
+    aliases: ['y'],
+    description: [
+      'The default answer to a delete confirmation is YES.',
+      'Does not work in quiet mode.',
+    ],
+    examples: [{
+      example: `${command} --provider github --github.token ${auth.token} --github.owner ${auth.owner} --github.repo ${auth.repo} --yes`,
+    }],
+  },
+  {
+    name: 'no',
+    aliases: ['n'],
+    description: [
+      'The default answer to a delete confirmation is NO (Default).',
+      'Does not work in quiet mode.',
+    ],
+    examples: [{
+      example: `${command} --provider github --github.token ${auth.token} --github.owner ${auth.owner} --github.repo ${auth.repo} --no`,
     }],
   },
   {
