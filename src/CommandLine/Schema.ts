@@ -122,6 +122,23 @@ export const schema: Array<ParameterInfo> = [
     description: [
       'Path to custom js-file containing branch processing parameters.'
     ],
+    examples: [
+      {
+        title: 'The following example shows a simple configuration file:',
+        example: `{
+  ignore: (e) => {
+    // ignore branch names: master, beta, and prod*
+    return Promise.resolve(
+      /(master|beta|prod.*)/.test(e.branchName)
+    );
+  },
+  remove: (e) => {
+    // remove all merged branches
+    return Promise.resolve(e.branch.merged);
+  }
+}`,
+      }
+    ],
   },
   {
     name: 'github.auth',
@@ -133,12 +150,12 @@ export const schema: Array<ParameterInfo> = [
       {
         title: 'The following example shows the structure of a JSON file containing repository access settings:',
         example: `{
-    "github": {
-      "token": "%YOUR GITHUB TOKEN HERE%",
-      "owner": "%GITHUB USERNAME OR ORGANIZATION NAME HERE%",
-      "repo": "%REPOSITORY NAME HERE%"
-    }
-  }`,
+  "github": {
+    "token": "%YOUR GITHUB TOKEN HERE%",
+    "owner": "%GITHUB USERNAME OR ORGANIZATION NAME HERE%",
+    "repo": "%REPOSITORY NAME HERE%"
+  }
+}`,
       },
       {
         title: 'The following example shows the use of a file containing parameters for accessing the repository:',
