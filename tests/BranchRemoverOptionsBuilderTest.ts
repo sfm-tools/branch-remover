@@ -345,7 +345,7 @@ describe('BranchRemoverOptionsBuilder', () => {
 
         sinon.assert.calledWith(
           readlineStub.question,
-          'Do you want to remove merged branch "issue-100"? Merged 0 seconds ago [Y/n] ',
+          'Do you want to remove merged branch "issue-100"? Merged 0 seconds ago [y/N] ',
           sinon.match.func
         );
 
@@ -388,7 +388,116 @@ describe('BranchRemoverOptionsBuilder', () => {
 
         sinon.assert.calledWith(
           readlineStub.question,
+          'Do you want to remove merged branch "issue-100"? Merged 0 seconds ago [y/N] ',
+          sinon.match.func
+        );
+
+        sinon.assert.calledOnce(readlineStub.close);
+
+        const jsonString = '[' + writer.toString().trim().replace(/[\r\n]+/g, ',') + ']';
+
+        expect(JSON.parse(jsonString))
+          .to.be.deep.equal([
+            {
+              branch,
+              level: 'debug',
+              message:'Can remove merged "{branch.name}", because no limit on merge date.',
+            },
+            {
+              branch,
+              level: 'debug',
+              message: 'The user has forbidden the removing of branch "{branch.name}".',
+            }
+          ]);
+
+        expect(result).to.be.false;
+      });
+    });
+
+    describe('yes', (): void => {
+      afterEach((): void => {
+        sinon.restore();
+      });
+
+      it('should show a confirmation and be TRUE when the answer is empty', async(): Promise<void> => {
+        const builder = new BranchRemoverOptionsBuilder();
+
+        builder.yes();
+
+        const options = builder.build();
+        const remove = options.remove as BranchRemoverOptionsRemoveFunction;
+
+        const readlineStub = {
+          question: sinon.stub().callsFake(
+            (query, callback) => {
+              callback('');
+            }
+          ),
+          close: sinon.stub(),
+        };
+
+        sinon.stub(
+          readline,
+          'createInterface'
+        ).returns(readlineStub);
+
+        const result = await remove({
+          context,
+          branch: {
+            merged: true,
+            name: 'issue-100',
+            updatedDate: new Date(),
+            mergedDate: new Date(),
+            hasUncommittedChanges: false,
+          },
+        });
+
+        sinon.assert.calledWith(
+          readlineStub.question,
           'Do you want to remove merged branch "issue-100"? Merged 0 seconds ago [Y/n] ',
+          sinon.match.func
+        );
+
+        sinon.assert.calledOnce(readlineStub.close);
+
+        expect(result).to.be.true;
+      });
+
+      it('should show a confirmation and be FALSE when the answer is empty', async(): Promise<void> => {
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder.build();
+        const remove = options.remove as BranchRemoverOptionsRemoveFunction;
+        const branch: Branch = {
+          merged: true,
+          name: 'issue-100',
+          // null - to avoid problems with different representation of dates
+          updatedDate: null,
+          mergedDate: null,
+          hasUncommittedChanges: false,
+        };
+
+        const readlineStub = {
+          question: sinon.stub().callsFake(
+            (query, callback) => {
+              callback('no');
+            }
+          ),
+          close: sinon.stub(),
+        };
+
+        sinon.stub(
+          readline,
+          'createInterface'
+        ).returns(readlineStub);
+
+        const result = await remove({
+          context,
+          branch,
+        });
+
+        sinon.assert.calledWith(
+          readlineStub.question,
+          'Do you want to remove merged branch "issue-100"? Merged 0 seconds ago [y/N] ',
           sinon.match.func
         );
 
