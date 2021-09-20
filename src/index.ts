@@ -79,6 +79,10 @@ if (params.config) {
     builder.yes();
   }
 
+  if (params.details) {
+    builder.details();
+  }
+
   builder.ignore(params.ignore);
 
   options = builder.build();

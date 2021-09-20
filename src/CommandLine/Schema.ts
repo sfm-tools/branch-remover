@@ -117,6 +117,15 @@ export const schema: Array<ParameterInfo> = [
     ],
   },
   {
+    name: 'details',
+    aliases: ['d'],
+    description: [
+      'Displays detailed information about each branch.',
+      'By default, detailed information is displayed only',
+      'for branches to be removed.',
+    ],
+  },
+  {
     name: 'config',
     aliases: ['c'],
     description: [

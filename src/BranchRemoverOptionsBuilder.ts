@@ -16,6 +16,8 @@ export class BranchRemoverOptionsBuilder {
 
   private _yes: boolean = false;
 
+  private _details: boolean = false;
+
   private _mergedDate: Date = null;
 
   private _staleDate: Date = null;
@@ -26,6 +28,8 @@ export class BranchRemoverOptionsBuilder {
     this.quiet = this.quiet.bind(this);
     this.merged = this.merged.bind(this);
     this.stale = this.stale.bind(this);
+    this.yes = this.yes.bind(this);
+    this.details = this.details.bind(this);
     this.ignore = this.ignore.bind(this);
     this.build = this.build.bind(this);
   }
@@ -37,6 +41,11 @@ export class BranchRemoverOptionsBuilder {
 
   public yes(): this {
     this._yes = true;
+    return this;
+  }
+
+  public details(): this {
+    this._details = true;
     return this;
   }
 
@@ -62,6 +71,7 @@ export class BranchRemoverOptionsBuilder {
     const mergedDate = this._mergedDate;
     const staleDate = this._staleDate;
     const quiet = this._quiet;
+    const details = this._details;
 
     return {
       ignore: (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
@@ -178,6 +188,10 @@ export class BranchRemoverOptionsBuilder {
               }
             );
           }
+        }
+
+        if (details && !result && !quiet) {
+          this.displayBranchInfo(branch);
         }
 
         return result;

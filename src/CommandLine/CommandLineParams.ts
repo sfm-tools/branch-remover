@@ -20,6 +20,11 @@ export type CommandLineParams = {
   yes?: boolean;
 
   /**
+   * Indicates the need to display detailed information about each branch.
+   */
+  details?: boolean;
+
+  /**
    * API provider for working with branches.
    */
   provider?: string;

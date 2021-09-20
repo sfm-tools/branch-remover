@@ -25,6 +25,7 @@ export const params = minimist(
       'test',
       'quiet',
       'yes',
+      'details',
     ],
     string: [
       'provider',
@@ -39,6 +40,7 @@ export const params = minimist(
       stale: '',
       quiet: false,
       yes: false,
+      details: false,
     },
   }
 ) as CommandLineParams;
