@@ -330,7 +330,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         sinon.stub(
           readline,
           'createInterface'
-        ).returns(readlineStub);
+        ).returns(<any>readlineStub);
 
         const result = await remove({
           context,
@@ -379,7 +379,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         sinon.stub(
           readline,
           'createInterface'
-        ).returns(readlineStub);
+        ).returns(<any>readlineStub);
 
         const result = await remove({
           context,
@@ -439,7 +439,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         sinon.stub(
           readline,
           'createInterface'
-        ).returns(readlineStub);
+        ).returns(<any>readlineStub);
 
         const result = await remove({
           context,
@@ -488,7 +488,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         sinon.stub(
           readline,
           'createInterface'
-        ).returns(readlineStub);
+        ).returns(<any>readlineStub);
 
         const result = await remove({
           context,
