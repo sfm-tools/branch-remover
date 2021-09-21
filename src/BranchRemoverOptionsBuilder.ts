@@ -1,5 +1,3 @@
-import chalk from 'chalk';
-import Table from 'cli-table';
 import humanizeDuration from 'humanize-duration';
 import readline from 'readline';
 
@@ -9,6 +7,7 @@ import {
   BranchRemoverOptionsIgnoreArgs,
   BranchRemoverOptionsRemoveArgs,
 } from './Core';
+import { branchInfoFormatter } from './Formatters';
 
 export class BranchRemoverOptionsBuilder {
 
@@ -200,60 +199,7 @@ export class BranchRemoverOptionsBuilder {
   }
 
   private displayBranchInfo(branch: Branch): void {
-    const now = new Date();
-    const table = new Table();
-
-    table.push(
-      {
-        'Branch': [
-          branch.name,
-        ]
-      },
-      {
-        'State': [
-          branch.merged ? chalk.green('merged') : chalk.red('unmerged'),
-        ]
-      },
-      {
-        'Merged date': [
-          branch.merged && branch.mergedDate
-            ? humanizeDuration(
-              now.getTime() - branch.mergedDate.getTime(),
-              {
-                largest: 1,
-                round: true,
-              }
-            ) + ` ago (${branch.mergedDate.toString()})`
-            : 'n/a',
-        ]
-      },
-      {
-        'Updated date': [
-          humanizeDuration(
-            now.getTime() - branch.updatedDate?.getTime(),
-            {
-              largest: 1,
-              round: true,
-            }
-          ) + ` ago (${branch.updatedDate?.toString()})`,
-        ]
-      },
-      {
-        'Has unmerged changes': [
-          branch.hasUncommittedChanges ? chalk.red('yes') : 'no',
-        ]
-      },
-    );
-
-    if (branch.url) {
-      table.push({
-        'Url': [
-          branch.url,
-        ]
-      });
-    }
-
-    console.log(table.toString());
+    console.log(branchInfoFormatter(branch));
   }
 
   private getRegExpOrNull(value: string): RegExp {
