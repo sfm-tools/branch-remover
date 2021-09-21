@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import Table from 'cli-table';
 import streams from 'memory-streams';
 import readline from 'readline';
 import sinon from 'sinon';
