@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import Table from 'cli-table';
 import streams from 'memory-streams';
 import readline from 'readline';
 import sinon from 'sinon';
@@ -7,6 +8,7 @@ import winston from 'winston';
 
 import { BranchRemoverOptionsBuilder } from '../src/BranchRemoverOptionsBuilder';
 import { Branch, BranchRemoverContext, BranchRemoverOptionsIgnoreFunction, BranchRemoverOptionsRemoveFunction, Logger } from '../src/Core';
+import { branchInfoFormatter } from '../src/Formatters';
 
 describe('BranchRemoverOptionsBuilder', () => {
   let context: BranchRemoverContext = null;
@@ -520,6 +522,67 @@ describe('BranchRemoverOptionsBuilder', () => {
           ]);
 
         expect(result).to.be.false;
+      });
+    });
+
+    describe('details', (): void => {
+      afterEach((): void => {
+        sinon.restore();
+      });
+
+      it('should display details for unmerged branch', async(): Promise<void> => {
+        const builder = new BranchRemoverOptionsBuilder();
+
+        builder.details();
+
+        const options = builder.build();
+        const remove = options.remove as BranchRemoverOptionsRemoveFunction;
+
+        sinon.stub(console, 'log');
+
+        const branch = {
+          merged: false,
+          name: 'issue-100',
+          updatedDate: new Date(),
+          mergedDate: new Date(),
+          hasUncommittedChanges: false,
+        };
+
+        await remove({
+          context,
+          branch,
+        });
+
+        sinon.assert.calledWith(
+          <any>console.log,
+          branchInfoFormatter(branch)
+        );
+      });
+
+      it('should not display details for unmerged branch', async(): Promise<void> => {
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder.build();
+        const remove = options.remove as BranchRemoverOptionsRemoveFunction;
+
+        sinon.stub(console, 'log');
+
+        const branch = {
+          merged: false,
+          name: 'issue-100',
+          updatedDate: new Date(),
+          mergedDate: new Date(),
+          hasUncommittedChanges: false,
+        };
+
+        await remove({
+          context,
+          branch,
+        });
+
+        sinon.assert.neverCalledWith(
+          <any>console.log,
+          branchInfoFormatter(branch)
+        );
       });
     });
   });
