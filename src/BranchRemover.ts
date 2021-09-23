@@ -26,6 +26,11 @@ export class BranchRemover implements IBranchRemover {
   }
 
   public async execute(options: BranchRemoverOptions, test?: boolean): Promise<void> {
+    const {
+      name: packageName,
+      version: packageVersion,
+    } = require('../package.json');
+
     const start = new Date();
     const logger = options.logger || new Logger();
     const ignore = this.buildIgnoreFunction(options.ignore);
@@ -34,6 +39,14 @@ export class BranchRemover implements IBranchRemover {
       test,
       logger,
     };
+
+    logger.info(
+      '{package} v{version}',
+      {
+        package: packageName,
+        version: packageVersion,
+      }
+    );
 
     logger.info(
       'Processing branches using {provider} provider in {mode} mode.',
