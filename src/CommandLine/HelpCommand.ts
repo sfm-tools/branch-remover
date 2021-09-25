@@ -9,6 +9,12 @@ import { schema } from './Schema';
 type RowType = { [key: string]: Array<string> };
 
 export const helpCommand = (): void => {
+  // TODO: PackageInfo service
+  const {
+    name: packageName,
+    version: packageVersion,
+  } = require('../../package.json');
+
   const additionalInfo = new Array<string>();
   const getRow = (x: ParameterInfo): RowType => {
     return {
@@ -21,10 +27,11 @@ export const helpCommand = (): void => {
   };
 
   let rows = schema.map(getRow);
+  let param: ParameterInfo = null;
 
   if (typeof params.help === 'string') {
     const findName = (params.help as unknown).toString().trim();
-    const param = schema.find(
+    param = schema.find(
       (x: ParameterInfo): boolean => {
         return x.name === findName
           || x.aliases?.includes(findName);
@@ -75,6 +82,10 @@ export const helpCommand = (): void => {
 
   table.push(...rows);
 
+  console.log(
+    `${packageName} v${packageVersion}`,
+    param ? `/ ${param.name}` : ''
+  );
   console.log(table.toString());
 
   if (additionalInfo?.length) {
