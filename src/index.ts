@@ -125,6 +125,7 @@ if (params.config) {
     }
 
     if (cacheParams.groups['timeout']) {
+      // TODO: Use parse-duration
       builder.cacheTimeout(
         parseInt(cacheParams.groups['timeout'], 10)
       );
