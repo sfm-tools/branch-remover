@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import fs from 'fs';
 import streams from 'memory-streams';
 import readline from 'readline';
 import sinon from 'sinon';
@@ -741,6 +742,74 @@ describe('BranchRemoverOptionsBuilder', () => {
             });
           }
         ).to.be.throw;
+      });
+    });
+
+    describe('cachePath', (): void => {
+      afterEach((): void => {
+        sinon.restore();
+      });
+
+      it('should have a default path for the cache file', (): void => {
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder.build();
+
+        sinon.stub(fs, 'existsSync');
+
+        options.cache.provider.load();
+
+        sinon.assert.calledWith(
+          <any>fs.existsSync,
+          BranchRemoverOptionsBuilder.DEFAULT_CACHE_PATH
+        );
+      });
+
+      it('should have custom path to the cache file', (): void => {
+        const cachePath = './custom.json';
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder
+          .cachePath(cachePath)
+          .build();
+
+        sinon.stub(fs, 'existsSync');
+
+        options.cache.provider.load();
+
+        sinon.assert.calledWith(
+          <any>fs.existsSync,
+          cachePath
+        );
+      });
+
+      it('should throw an exception if an empty path is specified', (): void => {
+        expect(
+          (): void => {
+            const builder = new BranchRemoverOptionsBuilder();
+            builder.cachePath('');
+          }
+        ).to.be.throw('Parameter "path" cannot be null or empty.');
+      });
+    });
+
+    describe('cacheTimeout', (): void => {
+      afterEach((): void => {
+        sinon.restore();
+      });
+
+      it('should be 0 by default', (): void => {
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder.build();
+
+        expect(options.cache.timeout).to.be.equal(0);
+      });
+
+      it('should have the specified value', (): void => {
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder
+          .cacheTimeout(300)
+          .build();
+
+        expect(options.cache.timeout).to.be.equal(300);
       });
     });
   });
