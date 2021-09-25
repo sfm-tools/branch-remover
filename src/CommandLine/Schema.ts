@@ -136,7 +136,7 @@ export const schema: Array<ParameterInfo> = [
     examples: [
       {
         title: 'The following example shows creating a backup of a branch before removing:',
-        example: `${command} --provider github --github.auth ./.auth.json --before "git clone --single-branch --branch \${branch} git@github.com:${auth.owner}/${auth.repo}.git"`,
+        example: `${command} --provider github --github.auth ./.auth.json --before "git -c credential.helper= -c core.quotepath=false -c log.showSignature=false fetch origin \${branch}:\${branch} --recurse-submodules=no"`,
       }
     ],
   },
