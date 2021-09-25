@@ -1,6 +1,6 @@
 import { Branch, BranchListItem } from './Types';
 
-export interface IProvider {
+export interface IBranchesProvider {
 
   /**
    * Gets the name of the provider.

@@ -3,7 +3,7 @@ import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 import {
   Branch,
   BranchListItem,
-  IProvider,
+  IBranchesProvider,
 } from '../../Core';
 import {
   Auth,
@@ -11,7 +11,7 @@ import {
   PullRequestStatus,
 } from './Types';
 
-export class GitHubProvider implements IProvider {
+export class GitHubProvider implements IBranchesProvider {
 
   private readonly _auth: Auth;
 

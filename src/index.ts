@@ -4,7 +4,7 @@ import parse from 'parse-duration';
 import { BranchRemover } from './BranchRemover';
 import { BranchRemoverOptionsBuilder } from './BranchRemoverOptionsBuilder';
 import { helpCommand, params } from './CommandLine';
-import { BranchRemoverOptions, IProvider } from './Core';
+import { BranchRemoverOptions, IBranchesProvider } from './Core';
 import { Auth, GitHubProvider } from './Providers/GitHubProvider';
 
 if (params.version) {
@@ -18,7 +18,7 @@ if (params.help) {
 }
 
 let options: BranchRemoverOptions;
-let provider: IProvider;
+let provider: IBranchesProvider;
 
 switch (params.provider.toLowerCase()) {
   case 'github': {

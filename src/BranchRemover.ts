@@ -6,21 +6,21 @@ import {
   BranchRemoverOptionsIgnoreArgs,
   BranchRemoverOptionsIgnoreFunction,
   BranchRemoverOptionsIgnoreType,
+  IBranchesProvider,
   IBranchRemover,
   ILogger,
-  IProvider,
   Logger,
 } from './Core';
 
 export class BranchRemover implements IBranchRemover {
 
-  private readonly _provider: IProvider;
+  private readonly _provider: IBranchesProvider;
 
-  public get provider(): IProvider {
+  public get provider(): IBranchesProvider {
     return this._provider;
   }
 
-  constructor(provider: IProvider) {
+  constructor(provider: IBranchesProvider) {
     this._provider = provider;
 
     this.execute = this.execute.bind(this);

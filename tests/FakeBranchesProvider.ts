@@ -3,10 +3,10 @@ import faker from 'faker';
 import {
   Branch,
   BranchListItem,
-  IProvider,
+  IBranchesProvider,
 } from '../src/Core';
 
-export class FakeProvider implements IProvider {
+export class FakeBranchesProvider implements IBranchesProvider {
 
   private _list = new Array<BranchListItem>();
 

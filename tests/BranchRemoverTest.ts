@@ -9,13 +9,13 @@ import { BranchRemover } from '../src/BranchRemover';
 import {
   BranchListItem,
   BranchRemoverOptionsIgnoreArgs,
+  IBranchesProvider,
   IBranchRemover,
   ILogger,
-  IProvider,
   Logger,
 } from '../src/Core';
+import { FakeBranchesProvider } from './FakeBranchesProvider';
 import { FakeCacheProvider } from './FakeCacheProvider';
-import { FakeProvider } from './FakeProvider';
 
 const setTimeoutAsync = util.promisify(
   (interval: number, callback?: Function): void => {
@@ -24,7 +24,7 @@ const setTimeoutAsync = util.promisify(
 );
 
 describe('BranchRemover', (): void => {
-  let provider: IProvider;
+  let provider: IBranchesProvider;
   let remover: IBranchRemover;
   let logger: ILogger;
   let writer: Writable;
@@ -72,7 +72,7 @@ describe('BranchRemover', (): void => {
 
   beforeEach((): void => {
     writer = new streams.WritableStream();
-    provider = new FakeProvider();
+    provider = new FakeBranchesProvider();
     remover = new BranchRemover(provider);
 
     initNewLogger();
@@ -93,7 +93,7 @@ describe('BranchRemover', (): void => {
   it('should skip a branch for which detailed information is missing', async(): Promise<void> => {
     await getBranchNames();
 
-    (<FakeProvider>provider).details.splice(0, 10);
+    (<FakeBranchesProvider>provider).details.splice(0, 10);
 
     await remover.execute({
       logger,
