@@ -57,7 +57,8 @@ export const schema: Array<ParameterInfo> = [
     name: 'quiet',
     aliases: ['q'],
     description: [
-      'The presence of this parameter disables the confirmation request to remove branches.',
+      'The presence of this parameter disables the confirmation',
+      'request to remove branches.',
       'Matching branches will be removed immediately.',
     ],
     examples: [{
@@ -130,7 +131,8 @@ export const schema: Array<ParameterInfo> = [
     aliases: ['b'],
     description: [
       'The command is to be executed before removing the branch.',
-      'If the result of the command execution is the string "0" or "false",',
+      'If the result of the command execution is the string',
+      '"0" or "false",',
       'then removing will be prevented.',
     ],
     examples: [
@@ -201,8 +203,10 @@ export const schema: Array<ParameterInfo> = [
   {
     name: 'github.auth',
     description: [
-      'The path to the JSON file that contains the repository access parameters.',
-      'Required only for provider "github", when the access parameters are not specified separately.',
+      'The path to the JSON file that contains the repository',
+      'access parameters.',
+      'Required only for provider "github", when the access',
+      'parameters are not specified separately.',
     ],
     examples: [
       {
@@ -225,22 +229,25 @@ export const schema: Array<ParameterInfo> = [
     name: 'github.token',
     description: [
       'GitHub access token.',
-      'https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token',
-      'Required only for provider "github", when github.auth is not specified.',
+      'Required only for provider "github",',
+      'when github.auth is not specified.',
     ],
   },
   {
     name: 'github.owner',
     description: [
-      'Username or organization name on GitHub. For example: sfm-tools.',
-      'Required only for provider "github", when github.auth is not specified.',
+      'Username or organization name on GitHub.',
+      'For example: sfm-tools.',
+      'Required only for provider "github",',
+      'when github.auth is not specified.',
     ],
   },
   {
     name: 'github.repo',
     description: [
       'Repository name on GitHub. For example: branch-remover.',
-      'Required only for provider "github", when github.auth is not specified.',
+      'Required only for provider "github",',
+      'when github.auth is not specified.',
     ],
   },
 ];
