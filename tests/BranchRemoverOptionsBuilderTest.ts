@@ -765,7 +765,7 @@ describe('BranchRemoverOptionsBuilder', () => {
       });
 
       it('should have custom path to the cache file', (): void => {
-        const cachePath = './custom.json';
+        const cachePath = './custom.cache';
         const builder = new BranchRemoverOptionsBuilder();
         const options = builder
           .cachePath(cachePath)

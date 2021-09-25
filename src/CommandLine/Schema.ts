@@ -160,8 +160,8 @@ export const schema: Array<ParameterInfo> = [
     ],
     examples: [
       {
-        title: 'The following example shows caching to the ".cache.json" file enabled for 600 seconds:',
-        example: `${command} --provider github --github.auth ./.auth.json --cache "./.cache.json timeout=600"`,
+        title: 'The following example shows caching to the ".branch-remover.cache" file enabled for 600 seconds:',
+        example: `${command} --provider github --github.auth ./.auth.json --cache "./.branch-remover.cache timeout=600"`,
       }
     ],
   },

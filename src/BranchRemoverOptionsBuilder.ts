@@ -17,7 +17,7 @@ const exec = util.promisify(child_process.exec);
 
 export class BranchRemoverOptionsBuilder {
 
-  public static readonly DEFAULT_CACHE_PATH = './cache.json';
+  public static readonly DEFAULT_CACHE_PATH = './.branch-remover.cache';
 
   private _quiet: boolean = false;
 
