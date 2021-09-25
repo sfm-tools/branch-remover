@@ -28,8 +28,8 @@
   "scripts": {
     "start": "node ./node_modules/ts-node/dist/bin.js src/index.ts",
     "build": "rimraf dist/ && tsc",
-    "test": "mocha -r ts-node/register tests/*.ts tests/**/*.ts",
-    "nyc": "nyc --reporter=html mocha -r ts-node/register tests/*.ts tests/**/*.ts",
+    "test": "mocha -r ts-node/register tests/*.ts tests/**/*.ts --timeout=30000",
+    "nyc": "nyc --reporter=html mocha -r ts-node/register tests/*.ts tests/**/*.ts --timeout=30000",
     "eslint": "eslint src/ --ext ts"
   },
   "dependencies": {
