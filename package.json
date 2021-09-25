@@ -39,6 +39,7 @@
     "cli-table": "0.3.6",
     "humanize-duration": "3.27.0",
     "minimist": "1.2.5",
+    "node-cache": "5.1.2",
     "parse-duration": "1.0.0",
     "string-format": "2.0.0",
     "winston": "3.3.3"
