@@ -1,13 +1,18 @@
+import child_process from 'child_process';
 import humanizeDuration from 'humanize-duration';
 import readline from 'readline';
+import util from 'util';
 
 import {
   Branch,
   BranchRemoverOptions,
   BranchRemoverOptionsIgnoreArgs,
   BranchRemoverOptionsRemoveArgs,
+  ILogger,
 } from './Core';
 import { branchInfoFormatter } from './Formatters';
+
+const exec = util.promisify(child_process.exec);
 
 export class BranchRemoverOptionsBuilder {
 
@@ -23,6 +28,10 @@ export class BranchRemoverOptionsBuilder {
 
   private _ignore: string = null;
 
+  private _beforeRemove: string = null;
+
+  private _afterRemove: string = null;
+
   constructor() {
     this.quiet = this.quiet.bind(this);
     this.merged = this.merged.bind(this);
@@ -30,6 +39,8 @@ export class BranchRemoverOptionsBuilder {
     this.yes = this.yes.bind(this);
     this.details = this.details.bind(this);
     this.ignore = this.ignore.bind(this);
+    this.beforeRemove = this.beforeRemove.bind(this);
+    this.afterRemove = this.afterRemove.bind(this);
     this.build = this.build.bind(this);
   }
 
@@ -63,6 +74,16 @@ export class BranchRemoverOptionsBuilder {
     return this;
   }
 
+  public beforeRemove(command: string): this {
+    this._beforeRemove = command;
+    return this;
+  }
+
+  public afterRemove(command: string): this {
+    this._afterRemove = command;
+    return this;
+  }
+
   public build(): BranchRemoverOptions {
     const displayDefaultAnswer = this._yes ? '[Y/n]' : '[y/N]';
     const defaultAnswer = this._yes ? 'yes' : 'no';
@@ -71,6 +92,8 @@ export class BranchRemoverOptionsBuilder {
     const staleDate = this._staleDate;
     const quiet = this._quiet;
     const details = this._details;
+    const beforeRemove = this._beforeRemove;
+    const afterRemove = this._afterRemove;
 
     return {
       ignore: (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
@@ -195,6 +218,28 @@ export class BranchRemoverOptionsBuilder {
 
         return result;
       },
+      beforeRemove: ({ branch, context }: BranchRemoverOptionsRemoveArgs): Promise<boolean> => {
+        if (beforeRemove) {
+          return this.execCommand(
+            beforeRemove,
+            branch,
+            context.logger
+          );
+        } else {
+          return Promise.resolve(true);
+        }
+      },
+      afterRemove: ({ branch, context }: BranchRemoverOptionsRemoveArgs): Promise<boolean> => {
+        if (afterRemove) {
+          return this.execCommand(
+            afterRemove,
+            branch,
+            context.logger
+          );
+        } else {
+          return Promise.resolve(true);
+        }
+      },
     };
   }
 
@@ -206,6 +251,37 @@ export class BranchRemoverOptionsBuilder {
     return value
       ? new RegExp(value, 'g')
       : null;
+  }
+
+  private async execCommand(command: string, branch: Branch, logger: ILogger): Promise<boolean> {
+    const commandToExec = command
+      .replace(/(\\)(.{1})/g, String.fromCharCode(0) + '$2$1')
+      .replace(/\$\{branch\}/g, branch.name)
+      .replace(/(\0)(.{1})(\\)/g, '$2');
+
+    logger.debug(
+      'Preparation for command execution. Source: "{source}". Command to execute: {parsed}.',
+      {
+        source: command,
+        parsed: commandToExec,
+      }
+    );
+
+    const {
+      stdout,
+      stderr,
+    } = await exec(commandToExec);
+
+    logger.debug(
+      '{command} > stdout - {stdout}, stderr - {stderr}',
+      {
+        command: commandToExec,
+        stdout: stdout?.trim(),
+        stderr: stderr?.trim(),
+      }
+    );
+
+    return !!stdout && !/^(0|false)$/i.test(stdout);
   }
 
 }

@@ -16,6 +16,18 @@ export type BranchRemoverOptions = {
    */
   remove?: BranchRemoverOptionsRemoveFunction;
 
+  /**
+   * Called before remove.
+   * If the `remove` method returns false, then the call is not made.
+   */
+  beforeRemove?: BranchRemoverOptionsRemoveFunction;
+
+  /**
+   * Called after remove.
+   * If the `remove` method returns false, then the call is not made.
+   */
+  afterRemove?: BranchRemoverOptionsRemoveFunction;
+
 };
 
 export type BranchRemoverOptionsIgnoreArgs = {

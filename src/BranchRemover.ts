@@ -35,6 +35,9 @@ export class BranchRemover implements IBranchRemover {
     const logger = options.logger || new Logger();
     const ignore = this.buildIgnoreFunction(options.ignore);
     const remove = options.remove;
+    const dummy = (): Promise<boolean> => Promise.resolve(true);
+    const beforeRemove = options.beforeRemove || dummy;
+    const afterRemove = options.afterRemove || dummy;
     const context: BranchRemoverContext = {
       test,
       logger,
@@ -105,10 +108,12 @@ export class BranchRemover implements IBranchRemover {
         continue;
       }
 
-      const canRemove = await remove({
+      const args = {
         branch,
         context,
-      });
+      };
+
+      const canRemove = await remove(args);
 
       if (canRemove) {
         logger.info(
@@ -121,16 +126,25 @@ export class BranchRemover implements IBranchRemover {
         if (test) {
           logger.info('Skipped in test mode.');
         } else {
-          await this._provider.removeBranch(name);
+          // TODO: not sure if we need additional checking,
+          // this is probably redundant,
+          // need to think about this question
+          const canStillRemove = await beforeRemove(args);
 
-          ++totalRemoved;
+          if (canStillRemove) {
+            await this._provider.removeBranch(name);
 
-          logger.info(
-            'Successfully removed "{branch}"',
-            {
-              branch: name,
-            }
-          );
+            ++totalRemoved;
+
+            logger.info(
+              'Successfully removed "{branch}"',
+              {
+                branch: name,
+              }
+            );
+
+            await afterRemove(args);
+          }
         }
       }
     }
