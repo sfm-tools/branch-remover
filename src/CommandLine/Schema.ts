@@ -70,7 +70,7 @@ export const schema: Array<ParameterInfo> = [
     aliases: ['y'],
     description: [
       'The default answer to a delete confirmation is YES.',
-      'Does not work in quiet mode.',
+      'NOTE: Does not work in quiet mode.',
     ],
     examples: [{
       example: `${command} --provider github --github.token ${auth.token} --github.owner ${auth.owner} --github.repo ${auth.repo} --yes`,
@@ -81,7 +81,7 @@ export const schema: Array<ParameterInfo> = [
     aliases: ['n'],
     description: [
       'The default answer to a delete confirmation is NO (Default).',
-      'Does not work in quiet mode.',
+      'NOTE: Does not work in quiet mode.',
     ],
     examples: [{
       example: `${command} --provider github --github.token ${auth.token} --github.owner ${auth.owner} --github.repo ${auth.repo} --no`,
@@ -115,6 +115,7 @@ export const schema: Array<ParameterInfo> = [
       'Allows specifying the time after which the unmerged branch',
       'can be considered obsolete since the last update.',
       'For example: 2 years (or 2y), 6 months, etc.',
+      'Default: unset',
     ],
   },
   {
