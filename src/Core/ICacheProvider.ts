@@ -1,4 +1,4 @@
-export interface ICache {
+export interface ICacheProvider {
 
   has(key: string): boolean;
 

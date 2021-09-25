@@ -1,7 +1,7 @@
 export * from './Types';
-export { Cache } from './Cache';
+export { FileCacheProvider } from './FileCacheProvider';
 export { IBranchRemover } from './IBranchRemover';
-export { ICache } from './ICache';
+export { ICacheProvider } from './ICacheProvider';
 export { ILogger } from './ILogger';
 export { IProvider } from './IProvider';
 export { Logger } from './Logger';

@@ -1,11 +1,11 @@
 import fs from 'fs';
 import NodeCache from 'node-cache';
 
-import { ICache } from './ICache';
+import { ICacheProvider } from './ICacheProvider';
 
 type CacheItem = { key: string, value: any, ttl: number };
 
-export class Cache implements ICache {
+export class FileCacheProvider implements ICacheProvider {
 
   private readonly _cache = new NodeCache();
 
