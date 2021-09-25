@@ -124,7 +124,7 @@ export class BranchRemover implements IBranchRemover {
         );
 
         if (test) {
-          logger.info('Skipped in test mode.');
+          logger.info('Removing is not applicable in test mode.');
         } else {
           // TODO: not sure if we need additional checking,
           // this is probably redundant,
@@ -137,13 +137,21 @@ export class BranchRemover implements IBranchRemover {
             ++totalRemoved;
 
             logger.info(
-              'Successfully removed "{branch}"',
+              'Successfully removed "{branch}".',
               {
                 branch: name,
               }
             );
 
             await afterRemove(args);
+          } else {
+            logger.info(
+              'Removing branch "{branch}" canceled by the result of the {handler} handler.',
+              {
+                branch: name,
+                handler: 'beforeRemove',
+              }
+            );
           }
         }
       }
