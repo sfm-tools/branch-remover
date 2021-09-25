@@ -10,6 +10,7 @@ import {
   BranchRemoverOptionsRemoveArgs,
   FileCacheProvider,
   ILogger,
+  Logger,
 } from './Core';
 import { branchInfoFormatter } from './Formatters';
 
@@ -39,6 +40,8 @@ export class BranchRemoverOptionsBuilder {
 
   private _cachePath: string = BranchRemoverOptionsBuilder.DEFAULT_CACHE_PATH;
 
+  private _debug: boolean = false;
+
   constructor() {
     this.quiet = this.quiet.bind(this);
     this.merged = this.merged.bind(this);
@@ -50,6 +53,7 @@ export class BranchRemoverOptionsBuilder {
     this.afterRemove = this.afterRemove.bind(this);
     this.cacheTimeout = this.cacheTimeout.bind(this);
     this.cachePath = this.cachePath.bind(this);
+    this.debug = this.debug.bind(this);
     this.build = this.build.bind(this);
   }
 
@@ -108,6 +112,11 @@ export class BranchRemoverOptionsBuilder {
     return this;
   }
 
+  public debug(): this {
+    this._debug = true;
+    return this;
+  }
+
   public build(): BranchRemoverOptions {
     const displayDefaultAnswer = this._yes ? '[Y/n]' : '[y/N]';
     const defaultAnswer = this._yes ? 'yes' : 'no';
@@ -121,8 +130,14 @@ export class BranchRemoverOptionsBuilder {
     const cachePath = this._cachePath;
     const cacheTimeout = this._cacheTimeout;
     const cacheProvider = new FileCacheProvider(cachePath);
+    const logger = new Logger(
+      Logger.defaultOptions(
+        this._debug ? 'debug' : 'info'
+      )
+    );
 
     return {
+      logger,
       cache: {
         provider: cacheProvider,
         timeout: cacheTimeout,
