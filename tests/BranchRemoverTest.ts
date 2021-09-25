@@ -107,7 +107,7 @@ describe('BranchRemover', (): void => {
     const result = await getBranchNames();
 
     expect(result.length).to.be.equal(branches.length);
-    expect(log).to.be.contain('Skipped in test mode.');
+    expect(log).to.be.contain('Removing is not applicable in test mode.');
   });
 
   it('should only contain branches that were ignored by function results', async(): Promise<void> => {
