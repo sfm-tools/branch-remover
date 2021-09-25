@@ -95,7 +95,7 @@ if (params.config) {
   if (params.cache) {
     // TODO: understand at what level it is better to implement the parsing of cache parameters
     // consider implementing inside BranchRemoverOptionsBuilder or alternative solution
-    const cacheParams = /(?<path>.*)\s*((timeout=(?<timeout>\d+))|)/g.exec(params.cache);
+    const cacheParams = /(["']*)(?<path>[^\s]*)\s*((timeout=(?<timeout>\d+))|)(["']*)/g.exec(params.cache);
 
     if (cacheParams.groups['path']) {
       builder.cachePath(cacheParams.groups['path']);
