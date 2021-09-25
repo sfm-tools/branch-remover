@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import parse from 'parse-duration';
+import trim from 'trim-character';
 
 import { BranchRemover } from './BranchRemover';
 import { BranchRemoverOptionsBuilder } from './BranchRemoverOptionsBuilder';
@@ -8,7 +9,7 @@ import { BranchRemoverOptions, IBranchesProvider } from './Core';
 import { Auth, GitHubProvider } from './Providers/GitHubProvider';
 
 if (params.version) {
-  // TODO: PackageInfo service
+  // TODO: PackageInfo service + Tests
   const { version } = require('../package.json');
   console.log(`v${version}`);
   process.exit();
@@ -21,6 +22,15 @@ if (params.help) {
 let options: BranchRemoverOptions;
 let provider: IBranchesProvider;
 
+// TODO: Service + Tests
+const normalizeParameterValue = (value: string): string => {
+  return trim(
+    trim(value.trim(), '\'', 'g'),
+    '"',
+    'g'
+  );
+};
+
 switch (params.provider.toLowerCase()) {
   case 'github': {
     if (!params['github']) {
@@ -28,8 +38,11 @@ switch (params.provider.toLowerCase()) {
     }
 
     let auth: Auth = null;
+
     if (params['github']['auth']) {
-      auth = require(params['github']['auth']);
+      auth = require(
+        normalizeParameterValue(params['github']['auth'])
+      );
     } else {
       const requiredParams = [
         'token',
@@ -66,13 +79,17 @@ if (params.config) {
     builder.quiet();
   }
 
-  if (params.merged !== 'all') {
-    const milliseconds = parse(params.merged);
+  if (normalizeParameterValue(params.merged) !== 'all') {
+    const milliseconds = parse(
+      normalizeParameterValue(params.merged)
+    );
     builder.merged(new Date(now.getTime() - milliseconds));
   }
 
   if (params.stale) {
-    const milliseconds = parse(params.stale);
+    const milliseconds = parse(
+      normalizeParameterValue(params.stale)
+    );
     builder.stale(new Date(now.getTime() - milliseconds));
   }
 
@@ -85,17 +102,23 @@ if (params.config) {
   }
 
   if (params.before) {
-    builder.beforeRemove(params.before);
+    builder.beforeRemove(
+      normalizeParameterValue(params.before)
+    );
   }
 
   if (params.after) {
-    builder.afterRemove(params.after);
+    builder.afterRemove(
+      normalizeParameterValue(params.after)
+    );
   }
 
   if (params.cache) {
     // TODO: understand at what level it is better to implement the parsing of cache parameters
     // consider implementing inside BranchRemoverOptionsBuilder or alternative solution
-    const cacheParams = /(["']*)(?<path>[^\s]*)\s*((timeout=(?<timeout>\d+))|)(["']*)/g.exec(params.cache);
+    const cacheParams = /(?<path>[^\s]*)\s*((timeout=(?<timeout>\d+))|)/g.exec(
+      normalizeParameterValue(params.cache)
+    );
 
     if (cacheParams.groups['path']) {
       builder.cachePath(cacheParams.groups['path']);
@@ -108,7 +131,11 @@ if (params.config) {
     }
   }
 
-  builder.ignore(params.ignore);
+  if (params.ignore) {
+    builder.ignore(
+      normalizeParameterValue(params.ignore)
+    );
+  }
 
   options = builder.build();
 }
