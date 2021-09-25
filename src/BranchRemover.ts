@@ -26,6 +26,8 @@ export class BranchRemover implements IBranchRemover {
     this.execute = this.execute.bind(this);
   }
 
+  // TODO: I forgot why I made test a separate parameter from the options,
+  // it probably makes sense to combine
   public async execute(options: BranchRemoverOptions, test?: boolean): Promise<void> {
     // TODO: PackageInfo service
     const {
