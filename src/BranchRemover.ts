@@ -27,6 +27,7 @@ export class BranchRemover implements IBranchRemover {
   }
 
   public async execute(options: BranchRemoverOptions, test?: boolean): Promise<void> {
+    // TODO: PackageInfo service
     const {
       name: packageName,
       version: packageVersion,

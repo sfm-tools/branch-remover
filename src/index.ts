@@ -8,6 +8,7 @@ import { BranchRemoverOptions, IBranchesProvider } from './Core';
 import { Auth, GitHubProvider } from './Providers/GitHubProvider';
 
 if (params.version) {
+  // TODO: PackageInfo service
   const { version } = require('../package.json');
   console.log(`v${version}`);
   process.exit();
