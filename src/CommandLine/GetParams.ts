@@ -35,6 +35,7 @@ export const params = minimist(
       'config',
       'before',
       'after',
+      'cache',
     ],
     default: {
       provider: 'github',

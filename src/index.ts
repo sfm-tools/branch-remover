@@ -91,6 +91,22 @@ if (params.config) {
     builder.afterRemove(params.after);
   }
 
+  if (params.cache) {
+    // TODO: understand at what level it is better to implement the parsing of cache parameters
+    // consider implementing inside BranchRemoverOptionsBuilder or alternative solution
+    const cacheParams = /(?<path>.*)\s*((timeout=(?<timeout>\d+))|)/g.exec(params.cache);
+
+    if (cacheParams.groups['path']) {
+      builder.cachePath(cacheParams.groups['path']);
+    }
+
+    if (cacheParams.groups['timeout']) {
+      builder.cacheTimeout(
+        parseInt(cacheParams.groups['timeout'], 10)
+      );
+    }
+  }
+
   builder.ignore(params.ignore);
 
   options = builder.build();

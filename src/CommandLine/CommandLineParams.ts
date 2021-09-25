@@ -59,4 +59,6 @@ export type CommandLineParams = {
    */
   after?: string;
 
+  cache?: string;
+
 };

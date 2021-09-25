@@ -154,6 +154,18 @@ export const schema: Array<ParameterInfo> = [
     ],
   },
   {
+    name: 'cache',
+    description: [
+      'Allows managing branch caching.',
+    ],
+    examples: [
+      {
+        title: 'The following example shows caching to the ".cache.json" file enabled for 600 seconds:',
+        example: `${command} --provider github --github.auth ./.auth.json --cache "./.cache.json timeout=600"`,
+      }
+    ],
+  },
+  {
     name: 'config',
     aliases: ['c'],
     description: [
