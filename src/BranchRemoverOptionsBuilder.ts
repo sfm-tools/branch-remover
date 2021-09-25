@@ -312,7 +312,11 @@ export class BranchRemoverOptionsBuilder {
       }
     );
 
-    return !!stdout && !/^(0|false)$/i.test(stdout);
+    return !stdout
+      || (
+        stdout
+        && !/^(0|false)$/i.test(stdout)
+      );
   }
 
 }
