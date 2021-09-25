@@ -8,6 +8,7 @@ import {
   BranchRemoverOptions,
   BranchRemoverOptionsIgnoreArgs,
   BranchRemoverOptionsRemoveArgs,
+  FileCacheProvider,
   ILogger,
 } from './Core';
 import { branchInfoFormatter } from './Formatters';
@@ -15,6 +16,8 @@ import { branchInfoFormatter } from './Formatters';
 const exec = util.promisify(child_process.exec);
 
 export class BranchRemoverOptionsBuilder {
+
+  public static readonly DEFAULT_CACHE_PATH = './cache.json';
 
   private _quiet: boolean = false;
 
@@ -32,6 +35,10 @@ export class BranchRemoverOptionsBuilder {
 
   private _afterRemove: string = null;
 
+  private _cacheTimeout: number = 0;
+
+  private _cachePath: string = BranchRemoverOptionsBuilder.DEFAULT_CACHE_PATH;
+
   constructor() {
     this.quiet = this.quiet.bind(this);
     this.merged = this.merged.bind(this);
@@ -41,6 +48,8 @@ export class BranchRemoverOptionsBuilder {
     this.ignore = this.ignore.bind(this);
     this.beforeRemove = this.beforeRemove.bind(this);
     this.afterRemove = this.afterRemove.bind(this);
+    this.cacheTimeout = this.cacheTimeout.bind(this);
+    this.cachePath = this.cachePath.bind(this);
     this.build = this.build.bind(this);
   }
 
@@ -84,6 +93,21 @@ export class BranchRemoverOptionsBuilder {
     return this;
   }
 
+  public cacheTimeout(timeout: number): this {
+    this._cacheTimeout = Number(timeout);
+    return this;
+  }
+
+  public cachePath(path: string): this {
+    if (!path) {
+      throw new Error('Parameter "path" cannot be null or empty.');
+    }
+
+    this._cachePath = path;
+
+    return this;
+  }
+
   public build(): BranchRemoverOptions {
     const displayDefaultAnswer = this._yes ? '[Y/n]' : '[y/N]';
     const defaultAnswer = this._yes ? 'yes' : 'no';
@@ -94,8 +118,15 @@ export class BranchRemoverOptionsBuilder {
     const details = this._details;
     const beforeRemove = this._beforeRemove;
     const afterRemove = this._afterRemove;
+    const cachePath = this._cachePath;
+    const cacheTimeout = this._cacheTimeout;
+    const cacheProvider = new FileCacheProvider(cachePath);
 
     return {
+      cache: {
+        provider: cacheProvider,
+        timeout: cacheTimeout,
+      },
       ignore: (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
         if (ignore) {
           // When a regex has the global flag set, test() will advance the lastIndex of the regex.
