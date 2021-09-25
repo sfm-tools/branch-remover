@@ -7,6 +7,7 @@ import {
   BranchRemoverOptionsIgnoreFunction,
   BranchRemoverOptionsIgnoreType,
   IBranchRemover,
+  ILogger,
   IProvider,
   Logger,
 } from './Core';
@@ -31,8 +32,79 @@ export class BranchRemover implements IBranchRemover {
       version: packageVersion,
     } = require('../package.json');
 
-    const start = new Date();
     const logger = options.logger || new Logger();
+    const cache = options.cache?.provider;
+    const cacheTimeout = options.cache?.timeout ?? 0;
+    const isCacheAvailable = cache && cacheTimeout > 0;
+
+    logger.info(
+      '{package} v{version}',
+      {
+        package: packageName,
+        version: packageVersion,
+      }
+    );
+
+    if (isCacheAvailable) {
+      cache.load();
+    }
+
+    try {
+      await this.processBranches(
+        logger,
+        options,
+        test ?? false
+      );
+    } catch (error) {
+      throw new Error(error.message);
+    } finally {
+      if (isCacheAvailable) {
+        cache.save();
+      }
+    }
+  }
+
+  private buildIgnoreFunction(value: BranchRemoverOptionsIgnoreType): BranchRemoverOptionsIgnoreFunction {
+    if (typeof value === 'function') {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      return (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
+        return Promise.resolve(
+          e.branchName === value
+        );
+      };
+    }
+
+    if (value instanceof RegExp) {
+      return (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
+        return Promise.resolve(
+          value.test(e.branchName)
+        );
+      };
+    }
+
+    if (Array.isArray(value)) {
+      return (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
+        return Promise.resolve(
+          value.includes(e.branchName)
+        );
+      };
+    }
+
+    return (): Promise<boolean> => Promise.resolve(false);
+  }
+
+  private async processBranches(
+    logger: ILogger,
+    options: Omit<BranchRemoverOptions, 'logger'>,
+    test: boolean
+  ): Promise<void> {
+    const start = new Date();
+    const cache = options.cache?.provider;
+    const cacheTimeout = options.cache?.timeout ?? 0;
+    const isCacheAvailable = cache && cacheTimeout > 0;
     const ignore = this.buildIgnoreFunction(options.ignore);
     const remove = options.remove;
     const dummy = (): Promise<boolean> => Promise.resolve(true);
@@ -42,14 +114,6 @@ export class BranchRemover implements IBranchRemover {
       test,
       logger,
     };
-
-    logger.info(
-      '{package} v{version}',
-      {
-        package: packageName,
-        version: packageVersion,
-      }
-    );
 
     logger.info(
       'Processing branches using {provider} provider in {mode} mode.',
@@ -75,6 +139,23 @@ export class BranchRemover implements IBranchRemover {
         }
       );
 
+      if (isCacheAvailable) {
+        const cacheKey = `branch-${name}`;
+
+        if (cache.has(cacheKey)) {
+          logger.info(
+            'Skip branch "{branch}", because it was cached before {ttl}.',
+            {
+              branch: name,
+              ttl: new Date(cache.getTtl(cacheKey)),
+            }
+          );
+          continue;
+        }
+
+        cache.add(cacheKey, 1, cacheTimeout);
+      }
+
       // NOTE: we have to check before getting branch details
       // because, depending on the provider, there may be limits on the number of requests;
       // for example, GitHub currently allows no more than 5,000 requests per hour for free
@@ -85,7 +166,7 @@ export class BranchRemover implements IBranchRemover {
 
       if (ignored) {
         logger.info(
-          'Skip branch "{branch}".',
+          'Skip branch "{branch}", because it matches an ignored value.',
           {
             branch: name,
           }
@@ -165,38 +246,6 @@ export class BranchRemover implements IBranchRemover {
         duration: (new Date().getTime() - start.getTime()) / 1000,
       }
     );
-  }
-
-  private buildIgnoreFunction(value: BranchRemoverOptionsIgnoreType): BranchRemoverOptionsIgnoreFunction {
-    if (typeof value === 'function') {
-      return value;
-    }
-
-    if (typeof value === 'string') {
-      return (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
-        return Promise.resolve(
-          e.branchName === value
-        );
-      };
-    }
-
-    if (value instanceof RegExp) {
-      return (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
-        return Promise.resolve(
-          value.test(e.branchName)
-        );
-      };
-    }
-
-    if (Array.isArray(value)) {
-      return (e: BranchRemoverOptionsIgnoreArgs): Promise<boolean> => {
-        return Promise.resolve(
-          value.includes(e.branchName)
-        );
-      };
-    }
-
-    return (): Promise<boolean> => Promise.resolve(false);
   }
 
 }
