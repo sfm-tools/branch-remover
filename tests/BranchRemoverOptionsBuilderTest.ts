@@ -13,6 +13,11 @@ describe('BranchRemoverOptionsBuilder', () => {
   let context: BranchRemoverContext = null;
   let writer: Writable = null;
 
+  const parseLog = <T = any>(): Array<T> => {
+    const jsonString = '[' + writer.toString().trim().replace(/[\r\n]+/g, ',') + ']';
+    return JSON.parse(jsonString);
+  };
+
   afterEach((): void => {
     writer = new streams.WritableStream();
 
@@ -395,9 +400,7 @@ describe('BranchRemoverOptionsBuilder', () => {
 
         sinon.assert.calledOnce(readlineStub.close);
 
-        const jsonString = '[' + writer.toString().trim().replace(/[\r\n]+/g, ',') + ']';
-
-        expect(JSON.parse(jsonString))
+        expect(parseLog())
           .to.be.deep.equal([
             {
               branch,
@@ -504,9 +507,7 @@ describe('BranchRemoverOptionsBuilder', () => {
 
         sinon.assert.calledOnce(readlineStub.close);
 
-        const jsonString = '[' + writer.toString().trim().replace(/[\r\n]+/g, ',') + ']';
-
-        expect(JSON.parse(jsonString))
+        expect(parseLog())
           .to.be.deep.equal([
             {
               branch,
@@ -582,6 +583,164 @@ describe('BranchRemoverOptionsBuilder', () => {
           <any>console.log,
           branchInfoFormatter(branch)
         );
+      });
+    });
+
+    describe('beforeRemove', (): void => {
+      const branch = {
+        merged: false,
+        name: 'issue-100',
+        updatedDate: new Date(),
+        mergedDate: new Date(),
+        hasUncommittedChanges: false,
+      };
+
+      it('should be true with default implementation', async(): Promise<void> => {
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder.build();
+
+        const result = await options.beforeRemove({
+          branch,
+          context
+        });
+
+        expect(result).to.be.true;
+      });
+
+      it('should output command with branch name, and the result should be true', async(): Promise<void> => {
+        const command = 'echo ${branch}';
+        const commandToExec = `echo ${branch.name}`;
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder
+          .beforeRemove(command)
+          .build();
+
+        const result = await options.beforeRemove({
+          branch,
+          context
+        });
+
+        const [
+          commandPreparation,
+          commandResult,
+        ] = parseLog();
+
+        expect(commandPreparation.source).to.be.equal(command);
+        expect(commandPreparation.parsed).to.be.equal(commandToExec);
+
+        expect(commandResult.command).to.be.equal(commandToExec);
+        expect(commandResult.stdout).to.be.equal(branch.name);
+        expect(commandResult.stderr).to.be.empty;
+
+        expect(result).to.be.true;
+      });
+
+      it('should escape special characters', async(): Promise<void> => {
+        const command = 'echo "\\${branch} ${branch} $\\{branch\\} ${branch\\}"';
+        const commandToExec = `echo "\${branch} ${branch.name} \${branch} \${branch}"`;
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder
+          .beforeRemove(command)
+          .build();
+
+        await options.beforeRemove({
+          branch,
+          context
+        });
+
+        const [
+          commandPreparation,
+          commandResult,
+        ] = parseLog();
+
+        expect(commandPreparation.source).to.be.equal(command);
+        expect(commandPreparation.parsed).to.be.equal(commandToExec);
+
+        expect(commandResult.command).to.be.equal(commandToExec);
+        expect(commandResult.stdout).to.be.equal(branch.name);
+        expect(commandResult.stderr).to.be.empty;
+      });
+
+      it('should be thrown an exception', (): void => {
+        const command = 'exit 1';
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder
+          .beforeRemove(command)
+          .build();
+
+        expect(
+          async(): Promise<void> => {
+            await options.beforeRemove({
+              branch,
+              context
+            });
+          }
+        ).to.be.throw;
+      });
+    });
+
+    describe('afterRemove', (): void => {
+      const branch = {
+        merged: false,
+        name: 'issue-100',
+        updatedDate: new Date(),
+        mergedDate: new Date(),
+        hasUncommittedChanges: false,
+      };
+
+      it('should be true with default implementation', async(): Promise<void> => {
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder.build();
+
+        const result = await options.afterRemove({
+          branch,
+          context
+        });
+
+        expect(result).to.be.true;
+      });
+
+      it('should output command with branch name', async(): Promise<void> => {
+        const command = 'echo ${branch}';
+        const commandToExec = `echo ${branch.name}`;
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder
+          .afterRemove(command)
+          .build();
+
+        await options.afterRemove({
+          branch,
+          context
+        });
+
+        const [
+          commandPreparation,
+          commandResult,
+        ] = parseLog();
+
+        expect(commandPreparation.source).to.be.equal(command);
+        expect(commandPreparation.parsed).to.be.equal(commandToExec);
+
+        expect(commandResult.command).to.be.equal(commandToExec);
+        expect(commandResult.stdout).to.be.equal(branch.name);
+        expect(commandResult.stderr).to.be.empty;
+      });
+
+      it('should be thrown an exception', (): void => {
+        const command = 'exit 1';
+        const builder = new BranchRemoverOptionsBuilder();
+        const options = builder
+          .afterRemove(command)
+          .build();
+
+        expect(
+          async(): Promise<void> => {
+            await options.afterRemove({
+              branch,
+              context
+            });
+          }
+        ).to.be.throw;
       });
     });
   });
