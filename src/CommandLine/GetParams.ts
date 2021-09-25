@@ -33,6 +33,8 @@ export const params = minimist(
       'merged',
       'stale',
       'config',
+      'before',
+      'after',
     ],
     default: {
       provider: 'github',

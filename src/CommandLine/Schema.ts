@@ -126,6 +126,34 @@ export const schema: Array<ParameterInfo> = [
     ],
   },
   {
+    name: 'before',
+    aliases: ['b'],
+    description: [
+      'The command is to be executed before removing the branch.',
+      'If the result of the command execution is the string "0" or "false",',
+      'then removing will be prevented.',
+    ],
+    examples: [
+      {
+        title: 'The following example shows creating a backup of a branch before removing:',
+        example: `${command} --provider github --github.auth ./.auth.json --before "git clone --single-branch --branch \${branch} git@github.com:${auth.owner}/${auth.repo}.git"`,
+      }
+    ],
+  },
+  {
+    name: 'after',
+    aliases: ['a'],
+    description: [
+      'The command is to be executed after removing the branch.',
+    ],
+    examples: [
+      {
+        title: 'The following example shows a command that writes the name of the removed branch to a file:',
+        example: `${command} --provider github --github.auth ./.auth.json --after echo "\${branch} >> ./removed-branches.log"`,
+      }
+    ],
+  },
+  {
     name: 'config',
     aliases: ['c'],
     description: [
@@ -144,7 +172,16 @@ export const schema: Array<ParameterInfo> = [
   remove: (e) => {
     // remove all merged branches
     return Promise.resolve(e.branch.merged);
-  }
+  },
+  beforeRemove: (e) => {
+    // you can return false to prevent removing
+    return Promise.resolve(true);
+  },
+  afterRemove: (e) => {
+    // it doesn't matter what this function returns
+    // you can throw an exception to leave further branch processing
+    return Promise.resolve(true);
+  },
 }`,
       }
     ],

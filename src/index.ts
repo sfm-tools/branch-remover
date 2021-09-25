@@ -83,6 +83,14 @@ if (params.config) {
     builder.details();
   }
 
+  if (params.before) {
+    builder.beforeRemove(params.before);
+  }
+
+  if (params.after) {
+    builder.afterRemove(params.after);
+  }
+
   builder.ignore(params.ignore);
 
   options = builder.build();

@@ -49,4 +49,14 @@ export type CommandLineParams = {
    */
   config?: string;
 
+  /**
+   * The command or file path to be executed before removing a branch.
+   */
+  before?: string;
+
+  /**
+   * The command or path to the file that will be executed after removing the branch.
+   */
+  after?: string;
+
 };
