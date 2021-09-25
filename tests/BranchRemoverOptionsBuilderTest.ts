@@ -609,7 +609,7 @@ describe('BranchRemoverOptionsBuilder', () => {
       });
 
       it('should output command with branch name, and the result should be true', async(): Promise<void> => {
-        const command = 'echo ${branch}';
+        const command = 'echo {branch}';
         const commandToExec = `echo ${branch.name}`;
         const builder = new BranchRemoverOptionsBuilder();
         const options = builder
@@ -637,8 +637,8 @@ describe('BranchRemoverOptionsBuilder', () => {
       });
 
       it('should escape special characters', async(): Promise<void> => {
-        const command = 'echo "\\${branch} ${branch} $\\{branch\\} ${branch\\}"';
-        const commandToExec = `echo "\${branch} ${branch.name} \${branch} \${branch}"`;
+        const command = 'echo "\\{branch} {branch} \\{branch\\} {branch\\}"';
+        const commandToExec = `echo "{branch} ${branch.name} {branch} {branch}"`;
         const builder = new BranchRemoverOptionsBuilder();
         const options = builder
           .beforeRemove(command)
@@ -658,7 +658,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         expect(commandPreparation.parsed).to.be.equal(commandToExec);
 
         expect(commandResult.command).to.be.equal(commandToExec);
-        expect(commandResult.stdout).to.be.equal(branch.name);
+        expect(commandResult.stdout).to.be.equal(`{branch} ${branch.name} {branch} {branch}`);
         expect(commandResult.stderr).to.be.empty;
       });
 
@@ -702,7 +702,7 @@ describe('BranchRemoverOptionsBuilder', () => {
       });
 
       it('should output command with branch name', async(): Promise<void> => {
-        const command = 'echo ${branch}';
+        const command = 'echo {branch}';
         const commandToExec = `echo ${branch.name}`;
         const builder = new BranchRemoverOptionsBuilder();
         const options = builder
