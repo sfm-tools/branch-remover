@@ -59,6 +59,14 @@ export type CommandLineParams = {
    */
   after?: string;
 
+  /**
+   * Specifies caching options.
+   */
   cache?: string;
+
+  /**
+   * Enables the output of debug information.
+   */
+  debug?: boolean;
 
 };

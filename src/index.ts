@@ -138,6 +138,10 @@ if (params.config) {
     );
   }
 
+  if (params.debug) {
+    builder.debug();
+  }
+
   options = builder.build();
 }
 
