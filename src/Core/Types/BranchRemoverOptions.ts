@@ -1,10 +1,13 @@
 import { ILogger } from '../ILogger';
 import { Branch } from './Branch';
 import { BranchRemoverContext } from './BranchRemoverContext';
+import { CacheOptions } from './CacheOptions';
 
 export type BranchRemoverOptions = {
 
   readonly logger?: ILogger;
+
+  readonly cache?: CacheOptions;
 
   /**
    * Branches to ignore/skip.
