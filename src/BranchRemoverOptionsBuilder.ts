@@ -302,7 +302,7 @@ export class BranchRemoverOptionsBuilder {
   private async execCommand(command: string, branch: Branch, logger: ILogger): Promise<boolean> {
     const commandToExec = command
       .replace(/(\\)(.{1})/g, String.fromCharCode(0) + '$2$1')
-      .replace(/\$\{branch\}/g, branch.name)
+      .replace(/\{branch\}/g, branch.name)
       .replace(/(\0)(.{1})(\\)/g, '$2');
 
     logger.debug(
