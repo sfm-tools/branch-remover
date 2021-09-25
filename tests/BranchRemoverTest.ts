@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import faker from 'faker';
 import streams from 'memory-streams';
 import { Writable } from 'stream';
+import util from 'util';
 import winston from 'winston';
 
 import { BranchRemover } from '../src/BranchRemover';
@@ -13,7 +14,14 @@ import {
   IProvider,
   Logger,
 } from '../src/Core';
+import { FakeCacheProvider } from './FakeCacheProvider';
 import { FakeProvider } from './FakeProvider';
+
+const setTimeoutAsync = util.promisify(
+  (interval: number, callback?: Function): void => {
+    setTimeout(callback, interval);
+  }
+);
 
 describe('BranchRemover', (): void => {
   let provider: IProvider;
@@ -50,11 +58,7 @@ describe('BranchRemover', (): void => {
     return value.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
   };
 
-  beforeEach((): void => {
-    writer = new streams.WritableStream();
-    provider = new FakeProvider();
-    remover = new BranchRemover(provider);
-
+  const initNewLogger = (): void => {
     logger = new Logger({
       levels: Logger.defaultLevels,
       level: 'info',
@@ -64,6 +68,14 @@ describe('BranchRemover', (): void => {
         }),
       ],
     });
+  };
+
+  beforeEach((): void => {
+    writer = new streams.WritableStream();
+    provider = new FakeProvider();
+    remover = new BranchRemover(provider);
+
+    initNewLogger();
   });
 
   it('provider should not be null', (): void => {
@@ -200,4 +212,30 @@ describe('BranchRemover', (): void => {
     expect(result.length).to.be.equal(0);
   });
 
+  it('should use cache', async(): Promise<void> => {
+    const branches = await getBranchNames();
+    const keys = branches.map((x: string): string => `branch-${x}`);
+
+    const cache = {
+      timeout: 10,
+      provider: new FakeCacheProvider(),
+    };
+
+    await remover.execute({
+      cache,
+      remove: (): Promise<boolean> => Promise.resolve(false),
+    }, true);
+
+    expect(cache.provider.keys()).to.be.deep.equal(keys);
+
+    await remover.execute({
+      cache,
+      logger,
+      remove: (): Promise<boolean> => Promise.resolve(true),
+    }, true);
+
+    const log = writer.toString();
+
+    expect(log).to.be.contains('because it was cached');
+  });
 });
