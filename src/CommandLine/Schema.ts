@@ -43,6 +43,15 @@ export const schema: Array<ParameterInfo> = [
     }],
   },
   {
+    name: 'debug',
+    description: [
+      'Enables the display of extended information',
+    ],
+    examples: [{
+      example: `${command} --provider github --github.token ${auth.token} --github.owner ${auth.owner} --github.repo ${auth.repo} --debug`,
+    }],
+  },
+  {
     name: 'provider',
     aliases: ['p'],
     description: [
