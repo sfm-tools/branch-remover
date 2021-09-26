@@ -189,7 +189,7 @@ export const schema: Array<ParameterInfo> = [
     examples: [
       {
         title: 'The following example shows a simple configuration file:',
-        example: `{
+        example: `module.exports = {
   ignore: (e) => {
     // ignore branch names: master, beta, and prod*
     return Promise.resolve(
@@ -209,7 +209,7 @@ export const schema: Array<ParameterInfo> = [
     // you can throw an exception to leave further branch processing
     return Promise.resolve(true);
   },
-}`,
+};`,
       }
     ],
   },
