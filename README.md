@@ -40,7 +40,7 @@ https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/
 
 You can also use a separate JSON file with access parameters. For example:
 
-**somename.json**
+**.auth.json**
 ```json
 {
   "owner": "%GITHUB USERNAME OR ORG NAME HERE%",
@@ -52,7 +52,7 @@ You can also use a separate JSON file with access parameters. For example:
 You can specify the path to this file using the `github.auth` parameter:
 
 ```bash
-branch-remover --github.auth ./somename.json --ignore "^(master|main)$"
+branch-remover --github.auth ./.auth.json --ignore "^(master|main)$"
 ```
 
 ## Options
