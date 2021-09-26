@@ -12,4 +12,6 @@ export type Branch = {
 
   url?: string;
 
+  additionalInfo?: Map<string, string>;
+
 };

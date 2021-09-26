@@ -88,6 +88,8 @@ export class GitHubProvider implements IBranchesProvider {
       order: 'desc',
     });
 
+    const additionalInfo = new Map<string, string>();
+
     let updatedDate: Date = null;
     let mergedDate: Date = null;
     let merged = false;
@@ -115,6 +117,10 @@ export class GitHubProvider implements IBranchesProvider {
         merged = status.merged;
         mergedDate = status.mergedDate;
       }
+
+      if (item.pull_request) {
+        additionalInfo.set('Pull Request Url', item.pull_request.html_url);
+      }
     } else {
       const commit = await this.getLastCommit(branchName);
 
@@ -127,6 +133,7 @@ export class GitHubProvider implements IBranchesProvider {
       mergedDate,
       updatedDate,
       hasUncommittedChanges,
+      additionalInfo,
       url: `https://github.com/${this._auth.owner}/${this._auth.repo}/tree/${branchName}`,
     };
   }

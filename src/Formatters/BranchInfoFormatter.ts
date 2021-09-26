@@ -52,10 +52,22 @@ export const branchInfoFormatter = (branch: Branch): string => {
 
   if (branch.url) {
     table.push({
-      'Url': [
+      'Branch Url': [
         branch.url,
       ]
     });
+  }
+
+  if (branch.additionalInfo?.size) {
+    branch.additionalInfo.forEach(
+      (value: string, key: string): void => {
+        table.push({
+          [key]: [
+            value,
+          ]
+        });
+      }
+    );
   }
 
   return table.toString();
