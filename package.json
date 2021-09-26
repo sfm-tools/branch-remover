@@ -30,6 +30,7 @@
     "build": "rimraf dist/ && tsc",
     "test": "mocha -r ts-node/register tests/*.ts tests/**/*.ts --timeout=30000",
     "nyc": "nyc --reporter=html mocha -r ts-node/register tests/*.ts tests/**/*.ts --timeout=30000",
+    "coverage": "nyc --reporter=text-lcov mocha -r ts-node/register tests/*.ts tests/**/*.ts | ./node_modules/coveralls/bin/coveralls.js",
     "eslint": "eslint src/ --ext ts"
   },
   "dependencies": {
