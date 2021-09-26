@@ -107,6 +107,8 @@ branch-remover --github.auth ./.auth.json --cache "timeout=604800"
 
 Path to custom js-file containing branch processing parameters.
 
+[Simple example config file](/examples/SimpleCustomConfig/config.js).
+
 ### --debug
 
 Enables the display of extended information.
