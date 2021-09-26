@@ -48,7 +48,7 @@ export const schema: Array<ParameterInfo> = [
   {
     name: 'debug',
     description: [
-      'Enables the display of extended information',
+      'Enables the display of extended information.',
     ],
     examples: [{
       example: `${command} --provider github --github.token ${auth.token} --github.owner ${auth.owner} --github.repo ${auth.repo} --debug`,
@@ -151,7 +151,7 @@ export const schema: Array<ParameterInfo> = [
     examples: [
       {
         title: 'The following example shows creating a backup of a branch before removing:',
-        example: `${command} --provider github --github.auth ./.auth.json --before "git -c credential.helper= -c core.quotepath=false -c log.showSignature=false fetch origin \${branch}:\${branch} --recurse-submodules=no"`,
+        example: `${command} --provider github --github.auth ./.auth.json --before "git -c credential.helper= -c core.quotepath=false -c log.showSignature=false fetch origin {branch}:{branch} --recurse-submodules=no"`,
       }
     ],
   },
@@ -164,7 +164,7 @@ export const schema: Array<ParameterInfo> = [
     examples: [
       {
         title: 'The following example shows a command that writes the name of the removed branch to a file:',
-        example: `${command} --provider github --github.auth ./.auth.json --after echo "\${branch} >> ./removed-branches.log"`,
+        example: `${command} --provider github --github.auth ./.auth.json --after echo "{branch} >> ./removed-branches.log"`,
       }
     ],
   },
