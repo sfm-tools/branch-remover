@@ -2,9 +2,9 @@
 
 [![NPM Version](https://badgen.net/npm/v/branch-remover)](https://www.npmjs.com/package/branch-remover)
 ![License](https://badgen.net/npm/license/branch-remover)
-[![Build Status](https://travis-ci.org/sfm-tools/branch-remover.svg?branch=main)](https://travis-ci.org/sfm-tools/branch-remover)
-[![Coverage Status](https://coveralls.io/repos/github/sfm-tools/branch-remover/badge.svg?branch=main)](https://coveralls.io/github/sfm-tools/branch-remover?branch=main)
-![Last Commit](https://badgen.net/github/last-commit/sfm-tools/branch-remover/main)
+[![Build Status](https://travis-ci.org/sfm-tools/branch-remover.svg?branch=master)](https://travis-ci.org/sfm-tools/branch-remover)
+[![Coverage Status](https://coveralls.io/repos/github/sfm-tools/branch-remover/badge.svg?branch=master)](https://coveralls.io/github/sfm-tools/branch-remover?branch=master)
+![Last Commit](https://badgen.net/github/last-commit/sfm-tools/branch-remover/master)
 [![Node Version](https://badgen.net/npm/node/branch-remover)](https://www.npmjs.com/package/branch-remover)
 
 The easiest way to remove unneeded branches in your GitHub repos.
