@@ -10,14 +10,14 @@ export type BranchRemoverOptions = {
   readonly cache?: CacheOptions;
 
   /**
+   * Checks if the specified branch can be removed or not.
+   */
+  remove: BranchRemoverOptionsRemoveFunction;
+
+  /**
    * Branches to ignore/skip.
    */
   ignore?: BranchRemoverOptionsIgnoreType;
-
-  /**
-   * Branches to remove.
-   */
-  remove?: BranchRemoverOptionsRemoveFunction;
 
   /**
    * Called before remove.
