@@ -49,7 +49,7 @@ You can also use a separate JSON file with access parameters. For example:
 }
 ```
 
-You can specify the path to this file using the github.auth parameter:
+You can specify the path to this file using the `github.auth` parameter:
 
 ```bash
 branch-remover --github.auth ./somename.json --ignore "^(master|main)$"
@@ -57,9 +57,89 @@ branch-remover --github.auth ./somename.json --ignore "^(master|main)$"
 
 ## Options
 
-### --version
+### --after
 
-Displays the version number of the application.
+Allows specifying a shell command that will be executed after removing a branch.
+
+You can use the `{branch}` marker to get the name of the removed branch.
+
+The following example shows a command that writes the name of the removed branch to a file:
+
+```bash
+branch-remover --github.auth ./.auth.json --after echo "{branch} >> ./removed-branches.log"
+```
+
+### --before
+
+Allows specifying a shell command that will be executed before removing a branch.
+
+You can use the `{branch}` marker to get the name of the removed branch.
+
+If the result of the command execution is the string "0" or "false", then removing will be prevented.
+
+The following example shows creating a backup of a branch before removing:
+
+```bash
+branch-remover --github.auth ./.auth.json --before "git -c credential.helper= -c core.quotepath=false -c log.showSignature=false fetch origin {branch}:{branch} --recurse-submodules=no"
+```
+
+### --cache
+
+Allows specifying caching options. Caching is implemented in the file system.
+
+You can specify the file path and cache time-to-live.
+
+```bash
+branch-remover --github.auth ./.auth.json --cache "./.branch-remover.cache timeout=600"
+```
+
+`./.branch-remover.cache` - is the default path to the cache file. It is optional to specify it.
+
+`timeout` - time-to-live time in seconds. Default: `0` - without caching.
+
+The following example shows caching enabled for 7 days (7 days * 24 hours * 60 minutes * 60 seconds = 604800 seconds):
+
+```bash
+branch-remover --github.auth ./.auth.json --cache "timeout=604800"
+```
+
+### --config
+
+Path to custom js-file containing branch processing parameters.
+
+### --debug
+
+Enables the display of extended information.
+
+### --details
+
+Enables the display of detailed information about each branch.
+
+By default, detailed information is only displayed for branches that will be removed.
+
+### --github.auth
+
+The path to the JSON file that contains the repository access parameters.
+
+Required only for provider "github", when the access parameters are not specified separately.
+
+### --github.owner
+
+Username or organization name on GitHub. For example: `sfm-tools`.
+
+Required only for provider "github", when `--github.auth` is not specified.
+
+### --github.repo
+
+Repository name on GitHub. For example: `branch-remover`.
+
+Required only for provider "github", when `--github.auth` is not specified.
+
+### --github.token
+
+GitHub access token - https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token
+
+Required only for provider "github", when `--github.auth` is not specified.
 
 ### --help
 
@@ -71,21 +151,6 @@ You can see additional information for each individual option:
 For example:
 * `branch-remover --help help`
 * `branch-remover --help github.auth`
-
-### --test
-
-Test mode, automatic removing branches is disabled.
-Use this option to **test your configuration**.
-
-### --provider
-
-Specifies the provider name. Expected values: `github` (default).
-
-### --quiet
-
-The presence of this option disables the confirmation request to remove branches.
-
-**Matching branches will be removed immediately. Be careful when using this option!**
 
 ### --ignore
 
@@ -107,10 +172,19 @@ Default: `all` (all merged branches).
 
 **NOTE:** Please use quotation marks if the option value contains a space. For example:
 
-
 ```bash
 branch-remover --github.auth ./auth.json --merged "2 months"
 ```
+
+### --provider
+
+Specifies the provider name. Expected values: `github` (default).
+
+### --quiet
+
+The presence of this option disables the confirmation request to remove branches.
+
+**Matching branches will be removed immediately. Be careful when using this option!**
 
 ### --stale
 
@@ -118,39 +192,20 @@ Allows specifying the time after which the unmerged branch can be considered obs
 
 This option is similar to `--merged`.
 
-### --config
+### --test
 
-Path to custom js-file containing branch processing parameters.
+Test mode, automatic removing branches is disabled.
+Use this option to **test your configuration**.
 
-### --github.auth
+### --version
 
-The path to the JSON file that contains the repository access parameters.
+Displays the version number of the application.
 
-Required only for provider "github", when the access parameters are not specified separately.
+### --yes
 
-### --github.auth
+The default answer to a delete confirmation is YES (default - NO).
 
-The path to the JSON file that contains the repository access parameters.
-
-Required only for provider "github", when the access parameters are not specified separately.
-
-### --github.token
-
-GitHub access token - https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token
-
-Required only for provider "github", when `--github.auth` is not specified.
-
-### --github.owner
-
-Username or organization name on GitHub. For example: `sfm-tools`.
-
-Required only for provider "github", when `--github.auth` is not specified.
-
-### --github.repo
-
-Repository name on GitHub. For example: `branch-remover`.
-
-Required only for provider "github", when `--github.auth` is not specified.
+Does not work with `--quiet`.
 
 ## License
 MIT
