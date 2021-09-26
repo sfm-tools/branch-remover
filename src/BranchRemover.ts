@@ -59,6 +59,7 @@ export class BranchRemover implements IBranchRemover {
         test ?? false
       );
     } catch (error) {
+      // TODO: Output the number of processed branches and the elapsed time
       throw new Error(error.message);
     } finally {
       if (isCacheAvailable) {
