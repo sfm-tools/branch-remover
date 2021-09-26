@@ -20,6 +20,9 @@ export const schema: Array<ParameterInfo> = [
     aliases: ['h'],
     description: [
       'Displays help information.',
+      'You can add a parameter name to see detailed',
+      'information about that parameter.',
+      `For example: ${command} --help help`,
     ],
     examples: [
       {
