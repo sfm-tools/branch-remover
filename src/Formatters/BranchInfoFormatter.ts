@@ -28,7 +28,7 @@ export const branchInfoFormatter = (branch: Branch): string => {
               largest: 1,
               round: true,
             }
-          ) + ` ago (${branch.mergedDate.toString()})`
+          ) + ` ago (${branch.mergedDate.toLocaleString()})`
           : 'n/a',
       ]
     },
@@ -40,7 +40,7 @@ export const branchInfoFormatter = (branch: Branch): string => {
             largest: 1,
             round: true,
           }
-        ) + ` ago (${branch.updatedDate?.toString()})`,
+        ) + ` ago (${branch.updatedDate?.toLocaleString()})`,
       ]
     },
     {
