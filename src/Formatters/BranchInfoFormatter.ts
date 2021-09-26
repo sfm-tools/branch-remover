@@ -45,7 +45,7 @@ export const branchInfoFormatter = (branch: Branch): string => {
     },
     {
       'Has unmerged changes': [
-        branch.hasUncommittedChanges ? chalk.red('yes') : 'no',
+        branch.hasUncommittedChanges ? chalk.red('yes') : chalk.green('no'),
       ]
     },
   );
