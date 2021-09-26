@@ -263,4 +263,8 @@ export const schema: Array<ParameterInfo> = [
       'when github.auth is not specified.',
     ],
   },
-];
+].sort(
+  (a: ParameterInfo, b: ParameterInfo): number => {
+    return a.name.localeCompare(b.name, 'en');
+  }
+);
