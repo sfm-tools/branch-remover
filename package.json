@@ -5,6 +5,7 @@
   "author": "Alexey Nemiro <alexey.nemiro@clearscale.com>",
   "license": "MIT",
   "keywords": [
+    "cli",
     "github",
     "automation",
     "branch remover",
@@ -12,7 +13,8 @@
     "remover",
     "cleaner",
     "cleaning",
-    "removing"
+    "removing",
+    "service"
   ],
   "homepage": "https://github.com/sfm-tools/branch-remover#readme",
   "bugs": {
