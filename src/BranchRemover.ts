@@ -123,7 +123,7 @@ export class BranchRemover implements IBranchRemover {
       'Processing branches using {provider} provider in {mode} mode.',
       {
         provider: chalk.yellow(this._provider.name),
-        mode: test ? chalk.yellow('test') : chalk.bold(chalk.red('remove')),
+        mode: test ? chalk.yellow('test') : chalk.bold(chalk.red('REMOVE')),
       }
     );
 
