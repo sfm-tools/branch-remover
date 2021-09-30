@@ -236,6 +236,6 @@ describe('BranchRemover', (): void => {
 
     const log = writer.toString();
 
-    expect(log).to.be.contains('because it was cached');
+    expect(log).to.be.contains('Skip cached branch');
   });
 });
