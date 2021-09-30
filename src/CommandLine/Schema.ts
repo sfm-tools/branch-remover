@@ -159,7 +159,7 @@ export const schema: Array<ParameterInfo> = [
     name: 'after',
     aliases: ['a'],
     description: [
-      'The command is to be executed after removing the branch.',
+      'The command is to be executed after a branch is removed.',
     ],
     examples: [
       {
