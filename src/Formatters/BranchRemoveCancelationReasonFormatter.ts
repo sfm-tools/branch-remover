@@ -15,7 +15,7 @@ export const branchRemoveCancelationReasonFormatter = (value: BranchRemoveCancel
       return 'merge date out of the allowed range';
 
     case BranchRemoveCancelationReason.UpdateDateOutOfRange:
-      return 'update date  out of the allowed range';
+      return 'update date out of the allowed range';
 
     case BranchRemoveCancelationReason.CanceledByUser:
       return 'canceled by user';
