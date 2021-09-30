@@ -1,6 +1,6 @@
 {
   "name": "branch-remover",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A small application for quickly removing unnecessary branches from GitHub.",
   "author": "Alexey Nemiro <alexey.nemiro@clearscale.com>",
   "license": "MIT",
