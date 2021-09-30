@@ -23,15 +23,19 @@ export type BranchRemoverOptions = {
    * Called before remove.
    * If the `remove` method returns false, then the call is not made.
    */
-  beforeRemove?: BranchRemoverOptionsRemoveFunction;
+  beforeRemove?: BranchRemoverOptionsBeforeRemoveFunction;
 
   /**
    * Called after remove.
    * If the `remove` method returns false, then the call is not made.
    */
-  afterRemove?: BranchRemoverOptionsRemoveFunction;
+  afterRemove?: BranchRemoverOptionsAfterRemoveFunction;
 
 };
+
+export type BranchRemoverOptionsAfterRemoveFunction = { (e: BranchRemoverOptionsRemoveArgs): Promise<void> };
+
+export type BranchRemoverOptionsBeforeRemoveFunction = { (e: BranchRemoverOptionsRemoveArgs): Promise<boolean> };
 
 export type BranchRemoverOptionsIgnoreArgs = {
 

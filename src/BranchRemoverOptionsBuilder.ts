@@ -275,15 +275,13 @@ export class BranchRemoverOptionsBuilder {
           return Promise.resolve(true);
         }
       },
-      afterRemove: ({ branch, context }: BranchRemoverOptionsRemoveArgs): Promise<boolean> => {
+      afterRemove: async({ branch, context }: BranchRemoverOptionsRemoveArgs): Promise<void> => {
         if (afterRemove) {
-          return this.execCommand(
+          await this.execCommand(
             afterRemove,
             branch,
             context.logger
           );
-        } else {
-          return Promise.resolve(true);
         }
       },
     };
