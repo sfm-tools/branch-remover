@@ -1,3 +1,4 @@
+import { BranchRemoveCancelationReason } from '../Enums';
 import { ILogger } from '../ILogger';
 import { Branch } from './Branch';
 import { BranchRemoverContext } from './BranchRemoverContext';
@@ -57,4 +58,4 @@ export type BranchRemoverOptionsRemoveArgs = {
 
 };
 
-export type BranchRemoverOptionsRemoveFunction = { (e: BranchRemoverOptionsRemoveArgs): Promise<boolean> };
+export type BranchRemoverOptionsRemoveFunction = { (e: BranchRemoverOptionsRemoveArgs): Promise<boolean | BranchRemoveCancelationReason> }

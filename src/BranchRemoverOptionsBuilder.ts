@@ -5,6 +5,7 @@ import util from 'util';
 
 import {
   Branch,
+  BranchRemoveCancelationReason,
   BranchRemoverOptions,
   BranchRemoverOptionsIgnoreArgs,
   BranchRemoverOptionsRemoveArgs,
@@ -155,7 +156,7 @@ export class BranchRemoverOptionsBuilder {
 
         return Promise.resolve(false);
       },
-      remove: async(e: BranchRemoverOptionsRemoveArgs): Promise<boolean> => {
+      remove: async(e: BranchRemoverOptionsRemoveArgs): Promise<boolean | BranchRemoveCancelationReason> => {
         const {
           branch,
           context: {
@@ -163,13 +164,13 @@ export class BranchRemoverOptionsBuilder {
           },
         } = e;
 
-        let result = false;
+        let result: boolean | BranchRemoveCancelationReason = false;
 
         if (branch.merged) {
           if (mergedDate) {
-            result = mergedDate && branch.mergedDate <= mergedDate;
+            if (branch.mergedDate <= mergedDate) {
+              result = true;
 
-            if (result) {
               logger.debug(
                 'Can remove merged "{branch.name}", because the merged date {branch.mergedDate} is less or equal to {date}.',
                 {
@@ -178,6 +179,8 @@ export class BranchRemoverOptionsBuilder {
                 }
               );
             } else {
+              result = BranchRemoveCancelationReason.MergeDateOutOfRange;
+
               logger.debug(
                 'Cannot remove merged "{branch.name}", because the merged date {branch.mergedDate} is greater than {date}.',
                 {
@@ -207,10 +210,12 @@ export class BranchRemoverOptionsBuilder {
                 date: staleDate,
               }
             );
+          } else {
+            result = BranchRemoveCancelationReason.UpdateDateOutOfRange;
           }
         }
 
-        if (result && !quiet) {
+        if (result === true && !quiet) {
           const question = (query: string): Promise<string> => {
             const rl = readline.createInterface({
               input: process.stdin,
@@ -247,10 +252,10 @@ export class BranchRemoverOptionsBuilder {
           );
 
           if (!/y(es|)+/gi.test(answer || defaultAnswer)) {
-            result = false;
+            result = BranchRemoveCancelationReason.CanceledByUser;
 
             logger.debug(
-              'The user has forbidden the removing of branch "{branch.name}".',
+              'Removing branch "{branch.name}" canceled by user.',
               {
                 branch,
               }
@@ -258,7 +263,7 @@ export class BranchRemoverOptionsBuilder {
           }
         }
 
-        if (details && !result && !quiet) {
+        if (details && !quiet && result !== true) {
           this.displayBranchInfo(branch);
         }
 

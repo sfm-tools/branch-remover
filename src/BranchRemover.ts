@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 
 import {
+  BranchRemoveCancelationReason,
   BranchRemoverContext,
   BranchRemoverOptions,
   BranchRemoverOptionsIgnoreArgs,
@@ -11,6 +12,7 @@ import {
   ILogger,
   Logger,
 } from './Core';
+import { branchRemoveCancelationReasonFormatter } from './Formatters';
 
 export class BranchRemover implements IBranchRemover {
 
@@ -106,9 +108,6 @@ export class BranchRemover implements IBranchRemover {
     test: boolean
   ): Promise<void> {
     const start = new Date();
-    const cache = options.cache?.provider;
-    const cacheTimeout = options.cache?.timeout ?? 0;
-    const isCacheAvailable = cache && cacheTimeout > 0;
     const ignore = this.buildIgnoreFunction(options.ignore);
     const remove = options.remove;
     const dummy = (): Promise<boolean> => Promise.resolve(true);
@@ -117,6 +116,19 @@ export class BranchRemover implements IBranchRemover {
     const context: BranchRemoverContext = {
       test,
       logger,
+    };
+
+    const cache = options.cache?.provider;
+    const cacheTimeout = options.cache?.timeout ?? 0;
+    const isCacheAvailable = cache && cacheTimeout > 0;
+    const addCache = (key: string, reason: BranchRemoveCancelationReason): void => {
+      if (isCacheAvailable) {
+        cache.add(
+          key,
+          reason,
+          cacheTimeout
+        );
+      }
     };
 
     logger.info(
@@ -133,6 +145,7 @@ export class BranchRemover implements IBranchRemover {
 
     for (let i = 0, ic = branches.length; i < ic; ++i) {
       const { name, lastCommitHash } = branches[i];
+      const cacheKey = `branch-${name}`;
 
       logger.info(
         'Processing branch {index} of {count} - {branch}',
@@ -144,20 +157,19 @@ export class BranchRemover implements IBranchRemover {
       );
 
       if (isCacheAvailable) {
-        const cacheKey = `branch-${name}`;
-
         if (cache.has(cacheKey)) {
           logger.info(
-            'Skip branch "{branch}", because it was cached before {ttl}.',
+            'Skip cached branch "{branch}" until {ttl}: {reason}.',
             {
               branch: name,
               ttl: new Date(cache.getTtl(cacheKey)),
+              reason: branchRemoveCancelationReasonFormatter(
+                cache.get(cacheKey)
+              ),
             }
           );
           continue;
         }
-
-        cache.add(cacheKey, 1, cacheTimeout);
       }
 
       // NOTE: we have to check before getting branch details
@@ -169,6 +181,10 @@ export class BranchRemover implements IBranchRemover {
       });
 
       if (ignored) {
+        addCache(
+          cacheKey,
+          BranchRemoveCancelationReason.Ignored
+        );
         logger.info(
           'Skip branch "{branch}", because it matches an ignored value.',
           {
@@ -184,6 +200,10 @@ export class BranchRemover implements IBranchRemover {
       );
 
       if (!branch) {
+        addCache(
+          cacheKey,
+          BranchRemoveCancelationReason.BranchNotFound
+        );
         logger.info(
           'Skip branch "{branch}", because no detailed information.',
           {
@@ -200,7 +220,7 @@ export class BranchRemover implements IBranchRemover {
 
       const canRemove = await remove(args);
 
-      if (canRemove) {
+      if (canRemove === true) {
         logger.info(
           'Removing "{branch}"...',
           {
@@ -230,6 +250,10 @@ export class BranchRemover implements IBranchRemover {
 
             await afterRemove(args);
           } else {
+            addCache(
+              cacheKey,
+              BranchRemoveCancelationReason.CanceledByBeforeHandler
+            );
             logger.info(
               'Removing branch "{branch}" canceled by the result of the {handler} handler.',
               {
@@ -239,6 +263,13 @@ export class BranchRemover implements IBranchRemover {
             );
           }
         }
+      } else {
+        addCache(
+          cacheKey,
+          typeof canRemove === 'boolean'
+            ? BranchRemoveCancelationReason.Other
+            : canRemove
+        );
       }
     }
 

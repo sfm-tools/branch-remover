@@ -1,3 +1,4 @@
+export * from './Enums';
 export * from './Types';
 export { FileCacheProvider } from './FileCacheProvider';
 export { IBranchRemover } from './IBranchRemover';
