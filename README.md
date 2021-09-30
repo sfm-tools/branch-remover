@@ -59,7 +59,7 @@ branch-remover --github.auth ./project.json --ignore "^(master|main)$"
 
 ### --after
 
-Allows specifying a shell command that will be executed after removing a branch.
+Allows specifying a shell command to execute after the branch is removed.
 
 You can use the `{branch}` marker to get the name of the removed branch.
 
@@ -75,7 +75,7 @@ Allows specifying a shell command that will be executed before removing a branch
 
 You can use the `{branch}` marker to get the name of the removed branch.
 
-If the result of the command execution is the string "0" or "false", then removing will be prevented.
+If the result of the command execution is the string `"0"` or `"false"`, then removing will be prevented.
 
 The following example shows creating a backup of a branch before removing:
 
@@ -111,7 +111,7 @@ Path to custom js-file containing branch processing parameters.
 
 ### --debug
 
-Enables the display of extended information.
+Enables the display of debugging information.
 
 ### --details
 
