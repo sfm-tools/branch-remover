@@ -7,7 +7,14 @@ import { Writable } from 'stream';
 import winston from 'winston';
 
 import { BranchRemoverOptionsBuilder } from '../src/BranchRemoverOptionsBuilder';
-import { Branch, BranchRemoverContext, BranchRemoverOptionsIgnoreFunction, BranchRemoverOptionsRemoveFunction, Logger } from '../src/Core';
+import {
+  Branch,
+  BranchRemoveCancelationReason,
+  BranchRemoverContext,
+  BranchRemoverOptionsIgnoreFunction,
+  BranchRemoverOptionsRemoveFunction,
+  Logger,
+} from '../src/Core';
 import { branchInfoFormatter } from '../src/Formatters';
 
 describe('BranchRemoverOptionsBuilder', () => {
@@ -171,7 +178,7 @@ describe('BranchRemoverOptionsBuilder', () => {
             hasUncommittedChanges: true,
           },
         })
-      ).to.be.false;
+      ).to.be.equal(BranchRemoveCancelationReason.UpdateDateOutOfRange);
     });
 
     describe('merged', (): void => {
@@ -222,7 +229,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         ).to.be.true;
       });
 
-      it('should return FALSE for the merged branch when merge date greater than specified', async(): Promise<void> => {
+      it('should return MergeDateOutOfRange for the merged branch when merge date greater than specified', async(): Promise<void> => {
         const builder = new BranchRemoverOptionsBuilder();
 
         builder.quiet();
@@ -242,7 +249,7 @@ describe('BranchRemoverOptionsBuilder', () => {
               hasUncommittedChanges: true,
             },
           })
-        ).to.be.false;
+        ).to.be.equal(BranchRemoveCancelationReason.MergeDateOutOfRange);
       });
     });
 
@@ -292,7 +299,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         ).to.be.true;
       });
 
-      it('should return FALSE for the unmerged branch when update date greater than specified', async(): Promise<void> => {
+      it('should return UpdateDateOutOfRange for the unmerged branch when update date greater than specified', async(): Promise<void> => {
         const builder = new BranchRemoverOptionsBuilder();
 
         builder.quiet();
@@ -311,7 +318,7 @@ describe('BranchRemoverOptionsBuilder', () => {
               hasUncommittedChanges: true,
             },
           })
-        ).to.be.false;
+        ).to.be.equal(BranchRemoveCancelationReason.UpdateDateOutOfRange);
       });
     });
 
@@ -361,7 +368,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         expect(result).to.be.true;
       });
 
-      it('should show a confirmation and be FALSE when the answer is "no"', async(): Promise<void> => {
+      it('should show a confirmation and be CanceledByUser when the answer is "no"', async(): Promise<void> => {
         const builder = new BranchRemoverOptionsBuilder();
         const options = builder.build();
         const remove = options.remove as BranchRemoverOptionsRemoveFunction;
@@ -411,11 +418,11 @@ describe('BranchRemoverOptionsBuilder', () => {
             {
               branch,
               level: 'debug',
-              message: 'The user has forbidden the removing of branch "{branch.name}".',
+              message: 'Removing branch "{branch.name}" canceled by user.',
             }
           ]);
 
-        expect(result).to.be.false;
+        expect(result).to.be.equal(BranchRemoveCancelationReason.CanceledByUser);
       });
     });
 
@@ -468,7 +475,7 @@ describe('BranchRemoverOptionsBuilder', () => {
         expect(result).to.be.true;
       });
 
-      it('should show a confirmation and be FALSE when the answer is empty', async(): Promise<void> => {
+      it('should show a confirmation and be CanceledByUser when the answer is empty', async(): Promise<void> => {
         const builder = new BranchRemoverOptionsBuilder();
         const options = builder.build();
         const remove = options.remove as BranchRemoverOptionsRemoveFunction;
@@ -518,11 +525,11 @@ describe('BranchRemoverOptionsBuilder', () => {
             {
               branch,
               level: 'debug',
-              message: 'The user has forbidden the removing of branch "{branch.name}".',
+              message: 'Removing branch "{branch.name}" canceled by user.',
             }
           ]);
 
-        expect(result).to.be.false;
+        expect(result).to.be.equal(BranchRemoveCancelationReason.CanceledByUser);
       });
     });
 
@@ -688,18 +695,6 @@ describe('BranchRemoverOptionsBuilder', () => {
         mergedDate: new Date(),
         hasUncommittedChanges: false,
       };
-
-      it('should be true with default implementation', async(): Promise<void> => {
-        const builder = new BranchRemoverOptionsBuilder();
-        const options = builder.build();
-
-        const result = await options.afterRemove({
-          branch,
-          context
-        });
-
-        expect(result).to.be.true;
-      });
 
       it('should output command with branch name', async(): Promise<void> => {
         const command = 'echo {branch}';
