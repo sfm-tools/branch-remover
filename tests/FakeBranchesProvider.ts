@@ -39,7 +39,7 @@ export class FakeBranchesProvider implements IBranchesProvider {
 
           this._list.push({
             name,
-            lastCommitHash: faker.git.commitSha,
+            lastCommitHash: faker.git.commitSha(),
           });
 
           this.details.push({
