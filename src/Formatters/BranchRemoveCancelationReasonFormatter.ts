@@ -24,6 +24,6 @@ export const branchRemoveCancelationReasonFormatter = (value: BranchRemoveCancel
       return 'canceled by before handler';
 
     default:
-      return value.toString();
+      return BranchRemoveCancelationReason[value];
   }
 };
