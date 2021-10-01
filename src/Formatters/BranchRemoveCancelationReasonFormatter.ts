@@ -20,6 +20,9 @@ export const branchRemoveCancelationReasonFormatter = (value: BranchRemoveCancel
     case BranchRemoveCancelationReason.CanceledByUser:
       return 'canceled by user';
 
+    case BranchRemoveCancelationReason.CanceledByBeforeHandler:
+      return 'canceled by before handler';
+
     default:
       return value.toString();
   }
