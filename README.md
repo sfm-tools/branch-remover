@@ -40,7 +40,7 @@ https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/
 
 You can also use a separate JSON file with access parameters. For example:
 
-**.auth.json**
+**project.json**
 ```json
 {
   "owner": "%GITHUB USERNAME OR ORG NAME HERE%",
