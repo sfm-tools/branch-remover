@@ -807,5 +807,77 @@ describe('BranchRemoverOptionsBuilder', () => {
         expect(options.cache.timeout).to.be.equal(300);
       });
     });
+
+    describe('debug', (): void => {
+      it('should contain debug information', async(): Promise<void> => {
+        const logger = new Logger({
+          levels: Logger.defaultLevels,
+          level: 'debug',
+          transports: [
+            new winston.transports.Stream({
+              stream: writer,
+            }),
+          ],
+        });
+
+        context = {
+          logger,
+        };
+
+        const options = new BranchRemoverOptionsBuilder()
+          .debug()
+          .quiet()
+          .build();
+
+        const remove = options.remove as BranchRemoverOptionsRemoveFunction;
+
+        await remove({
+          context,
+          branch: {
+            merged: true,
+            name: 'issue-100',
+            updatedDate: new Date(),
+            hasUncommittedChanges: false,
+          },
+        });
+
+        expect(writer.toString()).to.be.contain('"level":"debug"');
+      });
+    });
+
+    it('should not contain debug information', async(): Promise<void> => {
+      const logger = new Logger({
+        levels: Logger.defaultLevels,
+        level: 'info',
+        transports: [
+          new winston.transports.Stream({
+            stream: writer,
+          }),
+        ],
+      });
+
+      context = {
+        logger,
+      };
+
+      const options = new BranchRemoverOptionsBuilder()
+        .debug()
+        .quiet()
+        .build();
+
+      const remove = options.remove as BranchRemoverOptionsRemoveFunction;
+
+      await remove({
+        context,
+        branch: {
+          merged: true,
+          name: 'issue-100',
+          updatedDate: new Date(),
+          hasUncommittedChanges: false,
+        },
+      });
+
+      expect(writer.toString()).to.be.not.contain('"level":"debug"');
+    });
   });
 });
