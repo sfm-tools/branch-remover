@@ -40,7 +40,7 @@ https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/
 
 You can also use a separate JSON file with access parameters. For example:
 
-**project.json**
+**my-project.json**
 ```json
 {
   "owner": "%GITHUB USERNAME OR ORG NAME HERE%",
@@ -52,7 +52,7 @@ You can also use a separate JSON file with access parameters. For example:
 You can specify the path to this file using the `github.auth` parameter:
 
 ```bash
-branch-remover --github.auth ./project.json --ignore "^(master|main)$"
+branch-remover --github.auth ./my-project.json --ignore "^(master|main)$"
 ```
 
 ## Options
@@ -66,7 +66,7 @@ You can use the `{branch}` marker to get the name of the removed branch.
 The following example shows a command that writes the name of the removed branch to a file:
 
 ```bash
-branch-remover --github.auth ./project.json --after echo "{branch} >> ./removed-branches.log"
+branch-remover --github.auth ./my-project.json --after echo "{branch} >> ./removed-branches.log"
 ```
 
 ### --before
@@ -80,7 +80,7 @@ If the result of the command execution is the string `"0"` or `"false"`, then re
 The following example shows creating a backup of a branch before removing:
 
 ```bash
-branch-remover --github.auth ./project.json --before "git -c credential.helper= -c core.quotepath=false -c log.showSignature=false fetch origin {branch}:{branch} --recurse-submodules=no"
+branch-remover --github.auth ./my-project.json --before "git -c credential.helper= -c core.quotepath=false -c log.showSignature=false fetch origin {branch}:{branch} --recurse-submodules=no"
 ```
 
 ### --cache
@@ -90,7 +90,7 @@ Allows specifying caching options. Caching is implemented in the file system.
 You can specify the file path and cache time-to-live.
 
 ```bash
-branch-remover --github.auth ./project.json --cache "./.branch-remover.cache timeout=600"
+branch-remover --github.auth ./my-project.json --cache "./.branch-remover.cache timeout=600"
 ```
 
 `./.branch-remover.cache` - is the default path to the cache file. It is optional to specify it.
@@ -100,7 +100,7 @@ branch-remover --github.auth ./project.json --cache "./.branch-remover.cache tim
 The following example shows caching enabled for 7 days (7 days * 24 hours * 60 minutes * 60 seconds = 604800 seconds):
 
 ```bash
-branch-remover --github.auth ./project.json --cache "timeout=604800"
+branch-remover --github.auth ./my-project.json --cache "timeout=604800"
 ```
 
 ### --config
@@ -161,7 +161,7 @@ A regex pattern that allows specifying branches to ignore.
 For example, ignore `master` and `main` branches:
 
 ```bash
-branch-remover --github.auth ./project.json --ignore "^(master|main)$"
+branch-remover --github.auth ./my-project.json --ignore "^(master|main)$"
 ```
 
 ### --merged
@@ -175,7 +175,7 @@ Default: `all` (all merged branches).
 **NOTE:** Please use quotation marks if the option value contains a space. For example:
 
 ```bash
-branch-remover --github.auth ./project.json --merged "2 months"
+branch-remover --github.auth ./my-project.json --merged "2 months"
 ```
 
 ### --provider
