@@ -1,6 +1,6 @@
-# branch-remover
+# branch-remover  
 
-
+ 
 [![NPM Version](https://badgen.net/npm/v/branch-remover)](https://www.npmjs.com/package/branch-remover)
 ![License](https://badgen.net/npm/license/branch-remover)
 [![Build Status](https://travis-ci.com/sfm-tools/branch-remover.svg?branch=master)](https://travis-ci.com/sfm-tools/branch-remover)
